@@ -1,0 +1,14 @@
+program teste {
+    var int x = 10;
+    var real y = 3.14;
+    var string nome = "Joao";
+
+    if (x > 5) {
+        // comentário
+        y = y + 1.0;
+    }
+
+    /* comentário de bloco
+       mais de uma linha */
+    return;
+}
