@@ -63,5 +63,3 @@ tests/
 - nome_do_arquivo.LEX: Relatório da análise léxica
 
 - nome_do_arquivo.TAB: Tabela de símbolos
-
-# mini-static-analyzer
