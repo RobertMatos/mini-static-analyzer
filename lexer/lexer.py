@@ -35,10 +35,8 @@ reserved = {
 
 tokens += list(reserved.values())
 
-# Ignorar espaços e tabulações
 t_ignore = ' \t'
 
-# Operadores
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_MULT    = r'\*'
@@ -71,12 +69,16 @@ def t_INTCONST(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value.lower(), 'ID')  # check if it's a keyword
+    t.type = reserved.get(t.value.lower(), 'ID')
+    if t.type == 'ID' and hasattr(t.lexer, 'symbol_table') and t.lexer.symbol_table:
+        t.index = t.lexer.symbol_table.add(t.value, t.lineno)
+    else:
+        t.index = None
     return t
 
 def t_COMMENT_LINE(t):
     r'//.*'
-    pass  # ignora
+    pass
 
 def t_COMMENT_BLOCK(t):
     r'/\*[\s\S]*?\*/'
@@ -90,5 +92,7 @@ def t_error(t):
     print(f"[Erro Léxico] Caractere ilegal: {t.value[0]} (linha {t.lexer.lineno})")
     t.lexer.skip(1)
 
-def build_lexer():
-    return lex.lex()
+def build_lexer(symbol_table=None):
+    lexer = lex.lex()
+    lexer.symbol_table = symbol_table
+    return lexer
