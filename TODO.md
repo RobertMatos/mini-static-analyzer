@@ -1,0 +1,8 @@
+- [] Geração da tabela lexica 
+  - Saída esperada:
+    - `Lexeme: X, Código: X, ÍndiceTabSimb: X, Linha: X`
+- [] Add o código dos átomo 
+- [] Melhorar o relatorio da tabela de símbolos
+  - `Entrada: X, Codigo: XX, Lexeme: XX...`
+- [] Implementar executavel do projeto.
+- [] Documentar como o código irá rodar no ambiente **Windows** 
