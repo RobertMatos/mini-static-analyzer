@@ -1,14 +1,53 @@
-program teste {
-    var int x = 10;
-    var real y = 3.14;
-    var string nome = "Joao";
+program calculadoraSimples
+declarations
+  varType integer: contador, limite, resultado
+  varType real: nota1, nota2, mediaFinal
+  varType string: nomeAluno, disciplina
+  varType boolean: aprovado
+  varType character: opcao
+  varType integer[]: numeros[50]
+  varType real[]: medias[20]
+endDeclararions
+functions
+  funcType integer: somar(paramType integer: num1; paramType integer: num2)
+  {
+    // Esta função soma dois números inteiros
+    /* Comentário de bloco:
+       Implementação simples de soma
+       Retorna a soma dos parâmetros */
+    resultado := num1 + num2
+    return resultado
+  }
+  endFunction;
 
-    if (x > 5) {
-        // comentário
-        y = y + 1.0;
+  funcType real: calcularMedia(paramType real: n1; paramType real: n2; paramType real: n3)
+  {
+    // Calcula média de três notas
+    return (n1 + n2 + n3) / 3.0
+  }
+  endFunction;
+
+  funcType void: processarDados()
+  {
+    contador := 0
+    limite := 100
+
+    if (contador < limite)
+      print contador
+    endIf
+
+    while (contador <= limite)
+    {
+      contador := contador + 1;
+      if (contador >= 50)
+        break
+      endIf
     }
+    endWhile
 
-    /* comentário de bloco
-       mais de uma linha */
-    return;
-}
+    /* Loop de processamento concluído */
+    // Fim da função
+  }
+  endFunction
+endFunctions
+endProgram

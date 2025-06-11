@@ -13,6 +13,7 @@ Thumbs.db
 *.log
 *.tmp
 
+Etapas_MD/
 output/
 output/*.LEX
 output/*.TAB
