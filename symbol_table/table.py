@@ -38,7 +38,7 @@ class SymbolTable:
             int: Índice do símbolo na tabela (1-based)
         """
         # Debug: imprimir tentativa de inserção
-        print(f"DEBUG: Tentando inserir - Lexema: '{lexeme}', Código: {atom_code}, Linha: {line_number}")
+        print(f"DEBUG SymbolTable: Tentando inserir - Lexema: '{lexeme}', Código: {atom_code}, Linha: {line_number}")
 
         # Normalizar lexema para case-insensitive
         lexeme_normalized = lexeme.upper()
@@ -47,7 +47,7 @@ class SymbolTable:
         existing_index = self.lookup(lexeme)
         if existing_index is not None:
             # Símbolo já existe, apenas atualizar linha se necessário
-            print(f"DEBUG: Símbolo '{lexeme}' já existe no índice {existing_index}")
+            print(f"DEBUG SymbolTable: Símbolo '{lexeme}' já existe no índice {existing_index}")
             self._update_line(existing_index - 1, line_number)  # Convert to 0-based
             return existing_index
 
@@ -59,6 +59,9 @@ class SymbolTable:
         truncated_lexeme = lexeme[:32]
         truncated_length = len(truncated_lexeme)
 
+        # Determinar tipo do símbolo baseado no código do átomo
+        symbol_type = self._determine_symbol_type(atom_code)
+
         # Criar novo símbolo
         symbol = {
             'entry_number': self.next_entry_number,
@@ -66,193 +69,271 @@ class SymbolTable:
             'lexeme': truncated_lexeme,
             'original_length': original_length,
             'truncated_length': truncated_length,
-            'symbol_type': '--',  # Inicialmente indefinido
+            'symbol_type': symbol_type,
             'lines': [line_number]  # Primeira linha de ocorrência
         }
 
         # Adicionar à tabela
-        index = len(self.symbols)  # Índice 0-based interno
         self.symbols.append(symbol)
+
+        # Atualizar lookup table (case-insensitive)
         self.lookup_table[lexeme_normalized] = self.next_entry_number
 
-        entry_number = self.next_entry_number
+        print(f"DEBUG SymbolTable: Símbolo '{lexeme}' inserido com sucesso no índice {self.next_entry_number}")
+
+        # Incrementar contador e retornar índice
+        current_index = self.next_entry_number
         self.next_entry_number += 1
 
-        print(f"DEBUG: Novo símbolo inserido - Entrada: {entry_number}, Lexema: '{truncated_lexeme}'")
-        print(f"DEBUG: Total de símbolos na tabela: {len(self.symbols)}")
+        return current_index
 
-        return entry_number
+    def _determine_symbol_type(self, atom_code):
+        """
+        Determina o tipo do símbolo baseado no código do átomo.
+
+        Args:
+            atom_code (int): Código do átomo
+
+        Returns:
+            str: Tipo do símbolo
+        """
+        type_mapping = {
+            2: 'PROGRAM_NAME',      # PROGRAMNAME
+            18: 'FUNCTION_NAME',    # FUNCTYPE/FUNCTIONNAME
+            49: 'VARIABLE'          # VARIABLE
+        }
+        return type_mapping.get(atom_code, 'UNKNOWN')
+
+    def _update_line(self, index, line_number):
+        """
+        Atualiza as linhas de ocorrência de um símbolo existente.
+
+        Args:
+            index (int): Índice do símbolo na lista (0-based)
+            line_number (int): Nova linha de ocorrência
+        """
+        if 0 <= index < len(self.symbols):
+            if line_number not in self.symbols[index]['lines']:
+                self.symbols[index]['lines'].append(line_number)
+                self.symbols[index]['lines'].sort()
 
     def lookup(self, lexeme):
         """
-        Busca um símbolo na tabela.
+        Busca um símbolo na tabela pelo lexema.
 
         Args:
-            lexeme (str): O lexema a ser buscado
+            lexeme (str): Lexema a ser buscado
 
         Returns:
-            int or None: Número da entrada (1-based) se encontrado, None caso contrário
+            int or None: Índice do símbolo (1-based) ou None se não encontrado
         """
         lexeme_normalized = lexeme.upper()
         return self.lookup_table.get(lexeme_normalized)
 
-    def _update_line(self, internal_index, line_number):
+    def get_symbol(self, index):
         """
-        Atualiza as linhas de ocorrência de um símbolo (máximo 5).
+        Obtém um símbolo pelo índice.
 
         Args:
-            internal_index (int): Índice interno (0-based) do símbolo
-            line_number (int): Número da linha a ser adicionada
-        """
-        if internal_index < len(self.symbols):
-            lines = self.symbols[internal_index]['lines']
-            if line_number not in lines and len(lines) < 5:
-                lines.append(line_number)
+            index (int): Índice do símbolo (1-based)
 
-    def update_symbol_type(self, lexeme, symbol_type):
+        Returns:
+            dict or None: Dicionário com dados do símbolo ou None se não encontrado
         """
-        Atualiza o tipo de um símbolo.
-
-        Args:
-            lexeme (str): O lexema do símbolo
-            symbol_type (str): Tipo do símbolo (FP, IN, ST, CH, BL, VD, AF, AI, AS, AC, AB)
-        """
-        entry_number = self.lookup(lexeme)
-        if entry_number is not None:
-            internal_index = entry_number - 1  # Convert to 0-based
-            self.symbols[internal_index]['symbol_type'] = symbol_type
+        if 1 <= index <= len(self.symbols):
+            return self.symbols[index - 1].copy()  # Convert to 0-based and return copy
+        return None
 
     def get_symbol_count(self):
         """
         Retorna o número total de símbolos na tabela.
 
         Returns:
-            int: Número de símbolos
+            int: Quantidade de símbolos
         """
         return len(self.symbols)
 
-    def get_symbol_by_index(self, entry_number):
+    def get_all_symbols(self):
         """
-        Obtém um símbolo pelo seu número de entrada.
-
-        Args:
-            entry_number (int): Número da entrada (1-based)
+        Retorna todos os símbolos da tabela.
 
         Returns:
-            dict or None: Dicionário com os dados do símbolo ou None se não encontrado
+            list: Lista com cópias de todos os símbolos
         """
-        if 1 <= entry_number <= len(self.symbols):
-            return self.symbols[entry_number - 1].copy()
-        return None
+        return [symbol.copy() for symbol in self.symbols]
 
-    def generate_report_content(self, base_filename):
+    def is_empty(self):
         """
-        Gera o conteúdo do relatório da tabela de símbolos como string.
-
-        Args:
-            base_filename (str): Nome base do arquivo (sem extensão)
+        Verifica se a tabela está vazia.
 
         Returns:
-            str: Conteúdo do relatório formatado
+            bool: True se vazia, False caso contrário
         """
-        content = []
-
-        # Cabeçalho do relatório
-        content.append("=== RELATÓRIO DA TABELA DE SÍMBOLOS ===")
-        content.append(f"Arquivo: {base_filename}.251")
-        content.append("Equipe: [CÓDIGO_DA_EQUIPE]")
-        content.append("Componentes:")
-        content.append("- [Nome1] - [email1] - [telefone1]")
-        content.append("- [Nome2] - [email2] - [telefone2]")
-        content.append("- [Nome3] - [email3] - [telefone3]")
-        content.append("- [Nome4] - [email4] - [telefone4]")
-        content.append("")
-
-        # Verificar se há símbolos na tabela
-        if not self.symbols:
-            content.append("Nenhum símbolo identificador encontrado.")
-            return "\n".join(content)
-
-        # Dados dos símbolos
-        for symbol in self.symbols:
-            lines_str = str(symbol['lines']).replace(' ', '')  # Remove espaços da lista
-
-            content.append(
-                f"Entrada: {symbol['entry_number']}, "
-                f"Codigo: {symbol['atom_code']:02d}, "
-                f"Lexeme: {symbol['lexeme']}, "
-                f"TamOriginal: {symbol['original_length']}, "
-                f"TamTruncado: {symbol['truncated_length']}, "
-                f"Tipo: {symbol['symbol_type']}, "
-                f"Linhas: {lines_str}"
-            )
-
-        content.append(f"\nTotal de símbolos: {len(self.symbols)}")
-        return "\n".join(content)
-
-    def generate_report(self, base_filename):
-        """
-        Gera o relatório da tabela de símbolos no arquivo .TAB.
-
-        Args:
-            base_filename (str): Nome base do arquivo (sem extensão)
-        """
-        tab_filename = f"{base_filename}.TAB"
-
-        try:
-            with open(tab_filename, 'w', encoding='utf-8') as file:
-                # Cabeçalho do relatório
-                file.write("=== RELATÓRIO DA TABELA DE SÍMBOLOS ===\n")
-                file.write(f"Arquivo: {base_filename}.251\n")
-                file.write("Equipe: [CÓDIGO_DA_EQUIPE]\n")
-                file.write("Componentes:\n")
-                file.write("- [Nome1] - [email1] - [telefone1]\n")
-                file.write("- [Nome2] - [email2] - [telefone2]\n")
-                file.write("- [Nome3] - [email3] - [telefone3]\n")
-                file.write("- [Nome4] - [email4] - [telefone4]\n")
-                file.write("\n")
-
-                # Verificar se há símbolos na tabela
-                if not self.symbols:
-                    file.write("Nenhum símbolo identificador encontrado.\n")
-                    return
-
-                # Dados dos símbolos
-                for symbol in self.symbols:
-                    lines_str = str(symbol['lines']).replace(' ', '')  # Remove espaços da lista
-
-                    file.write(
-                        f"Entrada: {symbol['entry_number']}, "
-                        f"Codigo: {symbol['atom_code']:02d}, "
-                        f"Lexeme: {symbol['lexeme']}, "
-                        f"TamOriginal: {symbol['original_length']}, "
-                        f"TamTruncado: {symbol['truncated_length']}, "
-                        f"Tipo: {symbol['symbol_type']}, "
-                        f"Linhas: {lines_str}\n"
-                    )
-
-                file.write(f"\nTotal de símbolos: {len(self.symbols)}\n")
-
-        except IOError as e:
-            print(f"Erro ao gerar relatório .TAB: {e}")
-            raise
+        return len(self.symbols) == 0
 
     def clear(self):
         """
         Limpa toda a tabela de símbolos.
         """
-        self.symbols.clear()
-        self.lookup_table.clear()
-        self.next_entry_number = 1
+        self.initialize()
 
-    def __str__(self):
+    def generate_report_content(self, base_filename):
         """
-        Representação string da tabela para debug.
-        """
-        if not self.symbols:
-            return "Tabela de símbolos vazia"
+        Gera o conteúdo do relatório da tabela de símbolos.
 
-        result = f"Tabela de símbolos ({len(self.symbols)} símbolos):\n"
+        Args:
+            base_filename (str): Nome base do arquivo (sem extensão)
+
+        Returns:
+            str: Conteúdo formatado do relatório
+        """
+        if self.is_empty():
+            return self._generate_empty_report_content(base_filename)
+
+        lines = []
+
+        # Cabeçalho da tabela
+        lines.append("SÍMBOLOS ENCONTRADOS:")
+        lines.append("-" * 100)
+        lines.append(f"{'Entrada':<8} {'Código':<8} {'Lexema':<20} {'TamOrig':<8} {'TamTrunc':<9} {'Tipo':<15} {'Linhas':<15}")
+        lines.append("-" * 100)
+
+        # Dados dos símbolos
         for symbol in self.symbols:
-            result += f"  {symbol['entry_number']}: {symbol['lexeme']} (código {symbol['atom_code']})\n"
-        return result
+            lines_str = ','.join(map(str, symbol['lines']))
+            lines.append(
+                f"{symbol['entry_number']:<8} "
+                f"{symbol['atom_code']:<8} "
+                f"{symbol['lexeme']:<20} "
+                f"{symbol['original_length']:<8} "
+                f"{symbol['truncated_length']:<9} "
+                f"{symbol['symbol_type']:<15} "
+                f"{lines_str:<15}"
+            )
+
+        lines.append("-" * 100)
+        lines.append(f"Total de símbolos: {len(self.symbols)}")
+
+        # Estatísticas por tipo
+        type_counts = {}
+        for symbol in self.symbols:
+            symbol_type = symbol['symbol_type']
+            type_counts[symbol_type] = type_counts.get(symbol_type, 0) + 1
+
+        if type_counts:
+            lines.append("\nEstatísticas por tipo:")
+            for symbol_type, count in sorted(type_counts.items()):
+                lines.append(f"  {symbol_type}: {count}")
+
+        return '\n'.join(lines)
+
+    def _generate_empty_report_content(self, base_filename):
+        """
+        Gera conteúdo do relatório quando a tabela está vazia.
+
+        Args:
+            base_filename (str): Nome base do arquivo
+
+        Returns:
+            str: Conteúdo do relatório vazio
+        """
+        lines = [
+            "SÍMBOLOS ENCONTRADOS:",
+            "-" * 100,
+            f"{'Entrada':<8} {'Código':<8} {'Lexema':<20} {'TamOrig':<8} {'TamTrunc':<9} {'Tipo':<15} {'Linhas':<15}",
+            "-" * 100,
+            "(Nenhum símbolo encontrado)",
+            "-" * 100,
+            "Total de símbolos: 0"
+        ]
+        return '\n'.join(lines)
+
+    def print_debug_info(self):
+        """
+        Imprime informações de debug da tabela.
+        """
+        print(f"DEBUG SymbolTable - Estado atual:")
+        print(f"  Total de símbolos: {len(self.symbols)}")
+        print(f"  Próximo número de entrada: {self.next_entry_number}")
+        print(f"  Lookup table keys: {list(self.lookup_table.keys())}")
+
+        if self.symbols:
+            print("  Símbolos:")
+            for i, symbol in enumerate(self.symbols):
+                print(f"    [{i}] {symbol}")
+
+    def validate_integrity(self):
+        """
+        Valida a integridade da tabela de símbolos.
+
+        Returns:
+            tuple: (bool, list) - (é_válida, lista_de_erros)
+        """
+        errors = []
+
+        # Verificar se lookup_table está sincronizado
+        if len(self.lookup_table) != len(self.symbols):
+            errors.append(f"Lookup table desincronizada: {len(self.lookup_table)} vs {len(self.symbols)}")
+
+        # Verificar entrada_number sequencial
+        expected_entry = 1
+        for i, symbol in enumerate(self.symbols):
+            if symbol['entry_number'] != expected_entry:
+                errors.append(f"Entrada {i}: número esperado {expected_entry}, encontrado {symbol['entry_number']}")
+            expected_entry += 1
+
+        # Verificar se next_entry_number está correto
+        if self.next_entry_number != len(self.symbols) + 1:
+            errors.append(f"next_entry_number incorreto: {self.next_entry_number}, esperado {len(self.symbols) + 1}")
+
+        # Verificar se todos os símbolos no lookup_table existem
+        for lexeme, index in self.lookup_table.items():
+            if not (1 <= index <= len(self.symbols)):
+                errors.append(f"Lookup table: lexema '{lexeme}' aponta para índice inválido {index}")
+
+        return len(errors) == 0, errors
+
+
+# Exemplo de uso e teste
+if __name__ == "__main__":
+    # Teste básico da tabela de símbolos
+    table = SymbolTable()
+
+    print("=== TESTE DA TABELA DE SÍMBOLOS ===\n")
+
+    # Inserir alguns símbolos de teste
+    test_symbols = [
+        ("MEUPROGRAMA", 2, 1),      # PROGRAMNAME
+        ("CONTADOR", 49, 3),        # VARIABLE
+        ("LIMITE", 49, 3),          # VARIABLE
+        ("CALCULAR", 18, 7),        # FUNCTIONNAME
+        ("X", 49, 7),              # VARIABLE
+        ("Y", 49, 7),              # VARIABLE
+        ("CONTADOR", 49, 10),       # VARIABLE (duplicata)
+    ]
+
+    print("Inserindo símbolos de teste:")
+    for lexeme, code, line in test_symbols:
+        index = table.insert(lexeme, code, line)
+        print(f"  '{lexeme}' -> índice {index}")
+
+    print(f"\nTotal de símbolos únicos: {table.get_symbol_count()}")
+
+    # Testar busca
+    print("\nTeste de busca:")
+    for lexeme in ["MEUPROGRAMA", "contador", "INEXISTENTE"]:
+        result = table.lookup(lexeme)
+        print(f"  Busca por '{lexeme}': {result}")
+
+    # Gerar relatório
+    print("\n" + "="*50)
+    print("RELATÓRIO DA TABELA:")
+    print("="*50)
+    print(table.generate_report_content("teste"))
+
+    # Validar integridade
+    is_valid, errors = table.validate_integrity()
+    print(f"\nIntegridade da tabela: {'OK' if is_valid else 'ERRO'}")
+    if errors:
+        for error in errors:
+            print(f"  - {error}")

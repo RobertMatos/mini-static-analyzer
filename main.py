@@ -1,211 +1,218 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Static Checker CangaCode2025-1
-Programa Principal - main.py
-
+Programa Principal do Static Checker CangaCode2025-1
 Universidade Católica do Salvador - UCSal
-Bacharelado em Engenharia de Software
-Disciplina: Compiladores
-Professor: Osvaldo Requião Melo
 
-Este módulo implementa o ponto de entrada principal do Static Checker
-para a linguagem CangaCode2025-1, seguindo a arquitetura syntax-driven compiler.
+Este é o ponto de entrada principal do Static Checker.
+Demonstra o uso correto das classes corrigidas.
 """
 
 import sys
 import os
 from pathlib import Path
 
-# Importação do parser que atua como controlador principal
-try:
-    from parser.parser import Parser
-except ImportError as e:
-    print(f"Erro: Não foi possível importar o módulo parser: {e}")
-    print("Verifique se o arquivo parser/parser.py existe e está implementado.")
-    sys.exit(1)
+# Adicionar o diretório atual ao path para imports
+sys.path.insert(0, str(Path(__file__).parent))
+
+from parser.parser import Parser
 
 
-def print_usage():
+def create_test_file():
     """
-    Exibe instruções de uso do programa.
+    Cria um arquivo de teste para demonstrar o funcionamento.
     """
-    program_name = os.path.basename(sys.argv[0])
-    print(f"Uso: {program_name} <nome_arquivo>")
-    print()
-    print("Parâmetros:")
-    print("  nome_arquivo    Nome do arquivo fonte (sem extensão .251)")
-    print("                  Pode ser apenas o nome (busca no diretório atual)")
-    print("                  ou caminho completo para o arquivo")
-    print()
-    print("Exemplos:")
-    print(f"  {program_name} exemplo")
-    print(f"  {program_name} /caminho/para/exemplo")
-    print(f"  {program_name} ./testes/exemplo")
-    print()
-    print("Nota: O programa procurará automaticamente pelo arquivo com extensão .251")
+    test_content = """program meuPrograma
+declarations
+    vartype integer: contador, limite, resultado
+    vartype real: media, soma, valor
+    vartype string: nome, mensagem
+    vartype boolean: encontrado, finalizado
+endDeclarations
 
+functions
+    functype integer: calcularSoma(paramtype integer: a, b)
+        vartype integer: temp
+        temp := a + b
+        return temp
+    endFunction
 
-def validate_and_get_filepath(filename_arg):
-    """
-    Valida e obtém o caminho completo do arquivo .251 a ser analisado.
+    functype real: calcularMedia(paramtype real: x, y, z)
+        vartype real: resultado
+        resultado := (x + y + z) / 3.0
+        return resultado
+    endFunction
 
-    Args:
-        filename_arg (str): Argumento fornecido pelo usuário
+    functype void: imprimirResultado(paramtype string: texto)
+        print texto
+    endFunction
+endFunctions
 
-    Returns:
-        str: Caminho completo para o arquivo .251
+endProgram
+"""
 
-    Raises:
-        FileNotFoundError: Se o arquivo não for encontrado
-        ValueError: Se o argumento for inválido
-    """
-    if not filename_arg or filename_arg.strip() == "":
-        raise ValueError("Nome do arquivo não pode estar vazio")
+    with open('teste.251', 'w', encoding='utf-8') as f:
+        f.write(test_content)
 
-    # Remove espaços em branco
-    filename_arg = filename_arg.strip()
-
-    # Se o usuário forneceu extensão .251, remove para padronizar
-    if filename_arg.lower().endswith('.251'):
-        filename_arg = filename_arg[:-4]
-
-    # Adiciona a extensão .251
-    filepath = filename_arg + '.251'
-
-    # Converte para Path para manipulação mais robusta
-    file_path = Path(filepath)
-
-    # Se é um caminho absoluto ou relativo com diretórios
-    if file_path.is_absolute() or '/' in filepath or '\\' in filepath:
-        target_file = file_path
-    else:
-        # Se é apenas um nome, procura no diretório atual
-        target_file = Path.cwd() / filepath
-
-    # Verifica se o arquivo existe
-    if not target_file.exists():
-        raise FileNotFoundError(f"Arquivo não encontrado: {target_file}")
-
-    # Verifica se é um arquivo (não diretório)
-    if not target_file.is_file():
-        raise ValueError(f"O caminho especificado não é um arquivo válido: {target_file}")
-
-    return str(target_file.resolve())
+    print("Arquivo de teste 'teste.251' criado com sucesso!")
+    return 'teste.251'
 
 
 def main():
     """
-    Função principal do Static Checker CangaCode2025-1.
-
-    Responsabilidades:
-    - Processar argumentos da linha de comando
-    - Validar arquivo de entrada (.251)
-    - Instanciar e coordenar o parser
-    - Gerenciar fluxo de execução geral
-    - Tratar erros e garantir limpeza de recursos
-
-    Returns:
-        int: Código de retorno (0 para sucesso, 1 para erro)
+    Função principal do programa.
     """
-
     print("=" * 60)
-    print("Static Checker CangaCode2025-1")
+    print("STATIC CHECKER CANGACODE2025-1")
     print("Universidade Católica do Salvador - UCSal")
     print("=" * 60)
 
+    # Verificar argumentos
+    if len(sys.argv) != 2:
+        print("Uso: python main.py <arquivo.251>")
+        print("Ou: python main.py teste (para criar arquivo de teste)")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+
+    # Se o argumento for 'teste', criar arquivo de teste
+    if filename.lower() == 'teste':
+        filename = create_test_file()
+
     try:
-        # 1. PROCESSAR ARGUMENTOS DA LINHA DE COMANDO
-        if len(sys.argv) != 2:
-            print("Erro: Número incorreto de argumentos.")
-            print()
-            print_usage()
-            return 1
+        # Inicializar o parser
+        print(f"Inicializando análise do arquivo: {filename}")
+        parser = Parser(filename)
 
-        filename_arg = sys.argv[1]
+        # Executar análise
+        print("Executando análise léxica...")
+        success = parser.analyze()
 
-        # Verifica se o usuário pediu ajuda
-        if filename_arg.lower() in ['-h', '--help', 'help', '/?']:
-            print_usage()
-            return 0
-
-        print(f"Processando arquivo: {filename_arg}")
-
-        # 2. VALIDAR ARQUIVO .251
-        try:
-            source_filepath = validate_and_get_filepath(filename_arg)
-            print(f"Arquivo encontrado: {source_filepath}")
-        except (FileNotFoundError, ValueError) as e:
-            print(f"Erro na validação do arquivo: {e}")
-            return 1
-
-        # 3. INSTANCIAR O PARSER (CONTROLADOR PRINCIPAL)
-        print("Inicializando analisador...")
-        try:
-            parser = Parser(source_filepath)
-        except Exception as e:
-            print(f"Erro ao inicializar o parser: {e}")
-            return 1
-
-        # 4. EXECUTAR ANÁLISE
-        print("Iniciando análise léxica...")
-        try:
-            parser.analyze()
-            print("Análise léxica concluída com sucesso!")
+        if success:
+            print("✓ Análise léxica concluída com sucesso!")
 
             # Gerar relatórios
             print("Gerando relatórios...")
             parser.generate_reports()
-            print("Relatórios gerados com sucesso!")
 
-            # Informar localização dos arquivos gerados
-            base_name = Path(source_filepath).stem
-            output_dir = Path(source_filepath).parent
-            lex_file = output_dir / f"{base_name}.LEX"
-            tab_file = output_dir / f"{base_name}.TAB"
+            # Exibir estatísticas
+            stats = parser.get_statistics()
+            print("\n" + "=" * 40)
+            print("ESTATÍSTICAS DA ANÁLISE:")
+            print("=" * 40)
+            print(f"Tokens processados: {stats['total_tokens']}")
+            print(f"Símbolos na tabela: {stats['total_symbols']}")
+            print(f"Linhas processadas: {stats['total_lines']}")
+            print(f"Escopos processados: {stats['scopes_processed']}")
 
-            print()
-            print("Arquivos gerados:")
-            print(f"  - Relatório da análise léxica: {lex_file}")
-            print(f"  - Relatório da tabela de símbolos: {tab_file}")
+            # Exibir informações dos arquivos gerados
+            base_name = Path(filename).stem
+            directory = Path(filename).parent
 
-        except Exception as e:
-            print(f"Erro durante a análise: {e}")
-            return 1
+            lex_file = directory / f"{base_name}.LEX"
+            tab_file = directory / f"{base_name}.TAB"
 
-        print()
-        print("=" * 60)
-        print("Processamento concluído com sucesso!")
-        print("=" * 60)
+            print("\n" + "=" * 40)
+            print("ARQUIVOS GERADOS:")
+            print("=" * 40)
+            print(f"Relatório léxico: {lex_file}")
+            print(f"Tabela de símbolos: {tab_file}")
 
-        return 0
+            # Mostrar preview dos arquivos se forem pequenos
+            print("\n" + "=" * 40)
+            print("PREVIEW DO ARQUIVO .TAB:")
+            print("=" * 40)
+            try:
+                with open(tab_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    lines = content.split('\n')
+                    # Mostrar apenas as primeiras 30 linhas
+                    for i, line in enumerate(lines[:30]):
+                        print(line)
+                    if len(lines) > 30:
+                        print(f"... (mais {len(lines) - 30} linhas)")
+            except Exception as e:
+                print(f"Erro ao ler arquivo .TAB: {e}")
 
-    except KeyboardInterrupt:
-        print("\nOperação interrompida pelo usuário.")
-        return 1
+            print("\n✓ Análise concluída com sucesso!")
+            sys.exit(0)
+
+        else:
+            print("✗ Análise falhou!")
+            sys.exit(1)
+
+    except FileNotFoundError:
+        print(f"✗ Erro: Arquivo '{filename}' não encontrado!")
+        print("Certifique-se de que o arquivo existe e tem a extensão .251")
+        sys.exit(1)
 
     except Exception as e:
-        print(f"Erro inesperado: {e}")
-        print("Por favor, verifique os arquivos de entrada e tente novamente.")
-        return 1
+        print(f"✗ Erro fatal durante a análise: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
-    finally:
-        # 5. GARANTIR LIMPEZA DE RECURSOS
-        # Aqui poderia haver limpeza de recursos se necessário
-        # Por enquanto, apenas uma mensagem de debug se necessário
-        pass
+
+def test_components():
+    """
+    Testa os componentes individualmente.
+    """
+    print("=" * 60)
+    print("TESTE DOS COMPONENTES INDIVIDUAIS")
+    print("=" * 60)
+
+    # Teste do Lexer
+    print("\n1. TESTANDO LEXER:")
+    print("-" * 30)
+
+    from lexer.lexer import Lexer
+
+    test_code = """program teste
+    declarations
+        vartype integer: x, y
+    endDeclarations
+    endProgram"""
+
+    lexer = Lexer(test_code)
+    tokens = lexer.tokenize_all()
+
+    print(f"Tokens gerados: {len(tokens)}")
+    for i, (code, lexeme, line) in enumerate(tokens[:10]):  # Mostrar primeiros 10
+        print(f"  {i + 1}: Código {code}, Lexema '{lexeme}', Linha {line}")
+    if len(tokens) > 10:
+        print(f"  ... (mais {len(tokens) - 10} tokens)")
+
+    # Teste da Tabela de Símbolos
+    print("\n2. TESTANDO TABELA DE SÍMBOLOS:")
+    print("-" * 30)
+
+    from symbol_table.table import SymbolTable
+
+    table = SymbolTable()
+
+    # Inserir alguns símbolos
+    test_symbols = [
+        ("TESTE", 2, 1),
+        ("VARIAVEL1", 49, 3),
+        ("FUNCAO1", 18, 5)
+    ]
+
+    print("Inserindo símbolos de teste:")
+    for lexeme, code, line in test_symbols:
+        index = table.insert(lexeme, code, line)
+        print(f"  '{lexeme}' inserido no índice {index}")
+
+    print(f"\nTotal de símbolos: {table.get_symbol_count()}")
+
+    # Teste de busca
+    print("\nTeste de busca:")
+    for lexeme in ["TESTE", "variavel1", "INEXISTENTE"]:
+        result = table.lookup(lexeme)
+        print(f"  Busca '{lexeme}': {result}")
 
 
 if __name__ == "__main__":
-    # Configura a codificação para UTF-8 se disponível
-    try:
-        if hasattr(sys.stdout, 'reconfigure'):
-            sys.stdout.reconfigure(encoding='utf-8')
-        if hasattr(sys.stderr, 'reconfigure'):
-            sys.stderr.reconfigure(encoding='utf-8')
-    except:
-        pass
-
-    # Executa o programa principal e retorna o código de saída
-    exit_code = main()
-    sys.exit(exit_code)
+    # Se chamado com argumento 'test', executar testes
+    if len(sys.argv) == 2 and sys.argv[1].lower() == 'test':
+        test_components()
+    else:
+        main()

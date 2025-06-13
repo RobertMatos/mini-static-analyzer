@@ -48,8 +48,8 @@ class Parser:
         self.current_position = 0
         self.tokens_found: List[Tuple[str, int, Optional[int], int]] = []
 
-        # Tabela de palavras e símbolos reservados
-        self.reserved_words = self._init_reserved_words()
+        # Códigos de átomos que representam identificadores
+        self.identifier_codes = {2, 18, 49}  # PROGRAMNAME, FUNCTYPE/FUNCTIONNAME, VARIABLE
 
         # Controle de escopo (preparado para expansão futura)
         self.scope_stack = ['global']
@@ -88,80 +88,6 @@ class Parser:
 
         return str(file_path)
 
-    def _init_reserved_words(self) -> Dict[str, int]:
-        """
-        Inicializa a tabela de palavras e símbolos reservados.
-
-        Baseado no Apêndice A da especificação.
-
-        Returns:
-            Dicionário com palavras reservadas e seus códigos
-        """
-        return {
-            # Palavras reservadas de estrutura
-            'program': 1,
-            'declarations': 3,
-            'enddeclarations': 4,
-            'functions': 5,
-            'endfunctions': 6,
-            'endprogram': 7,
-            'vartype': 9,
-            'functype': 18,
-            'endfunction': 21,
-            'paramtype': 23,
-
-            # Tipos de dados
-            'real': 11,
-            'integer': 12,
-            'string': 13,
-            'boolean': 14,
-            'character': 15,
-            'void': 16,
-
-            # Comandos de controle
-            'if': 26,
-            'endif': 27,
-            'else': 28,
-            'while': 29,
-            'endwhile': 30,
-            'return': 31,
-            'break': 32,
-            'print': 33,
-
-            # Operadores relacionais
-            '<=': 35,
-            '<': 36,
-            '>': 37,
-            '>=': 38,
-            '==': 39,
-            '!=': 40,
-            '#': 41,
-
-            # Operadores aritméticos
-            '-': 42,
-            '+': 43,
-            '*': 44,
-            '/': 45,
-            '%': 46,
-
-            # Valores lógicos
-            'true': 47,
-            'false': 48,
-
-            # Delimitadores
-            ';': 8,
-            ':': 10,
-            '[': 17,
-            ']': 17,  # Mesmo código que [
-            ',': 22,
-            '(': 19,
-            ')': 20,
-            '?': 22,  # Mesmo código que ,
-            '{': 24,
-            '}': 25,
-            ':=': 34,
-        }
-
     def analyze(self) -> bool:
         """
         Executa a análise completa do arquivo fonte.
@@ -187,9 +113,6 @@ class Parser:
             # 4. Loop principal de análise
             self._main_analysis_loop()
 
-            # 5. Gerar relatórios
-            self.generate_reports()
-
             self.analysis_success = True
             print(f"Análise concluída com sucesso!")
             return True
@@ -206,6 +129,7 @@ class Parser:
         Loop principal de análise: chama o lexer até EOF.
         """
         token_count = 0
+        identifier_count = 0
 
         while True:
             try:
@@ -225,6 +149,10 @@ class Parser:
                 # Processar o token
                 symbol_table_index = self._process_token(lexeme, token_code, line_number)
 
+                if symbol_table_index is not None:
+                    identifier_count += 1
+                    print(f"DEBUG: Identificador inserido - Lexema: '{lexeme}', Código: {token_code}, Índice: {symbol_table_index}")
+
                 # Armazenar informações para o relatório .LEX
                 self.tokens_found.append((lexeme, token_code, symbol_table_index, line_number))
 
@@ -233,6 +161,7 @@ class Parser:
                 continue
 
         print(f"Total de tokens processados: {token_count}")
+        print(f"Total de identificadores inseridos na tabela: {identifier_count}")
 
     def _process_token(self, lexeme: str, token_code: int, line_number: int) -> Optional[int]:
         """
@@ -246,19 +175,16 @@ class Parser:
         Returns:
             Índice na tabela de símbolos (se aplicável) ou None
         """
-        # Verificar se é uma palavra reservada
-        lexeme_upper = lexeme.upper()
-        if lexeme_upper in self.reserved_words:
-            # Palavras reservadas não vão para a tabela de símbolos
-            return None
+        # Verificar se é um identificador (codes 2, 18, 49)
+        if token_code in self.identifier_codes:
+            print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
-        # Verificar se é um identificador (codes 2, 49, 18)
-        if token_code in [2, 49, 18]:  # programName, variable, functionName
             # Inserir na tabela de símbolos
             symbol_index = self.symbol_table.insert(lexeme, token_code, line_number)
+            print(f"DEBUG: Identificador '{lexeme}' inserido com índice {symbol_index}")
             return symbol_index
 
-        # Outros tokens (constantes, operadores) não vão para tabela de símbolos
+        # Palavras reservadas, constantes e operadores não vão para tabela de símbolos
         return None
 
     def _update_scope_control(self, lexeme: str, token_code: int):
@@ -340,6 +266,10 @@ class Parser:
             file.write("-" * 60 + "\n")
             file.write(f"Total de tokens: {len(self.tokens_found)}\n")
 
+            # Estatísticas adicionais
+            identifiers_count = sum(1 for _, _, symbol_index, _ in self.tokens_found if symbol_index is not None)
+            file.write(f"Total de identificadores: {identifiers_count}\n")
+
     def _generate_tab_report(self):
         """
         Gera o relatório da tabela de símbolos (.TAB).
@@ -358,8 +288,17 @@ class Parser:
             file.write("  - [NOME] - [EMAIL] - [TELEFONE]\n")
             file.write("=" * 80 + "\n\n")
 
-            # Gerar relatório da tabela de símbolos
-            self.symbol_table.generate_report_content(file)
+            # Usar método da tabela de símbolos para gerar conteúdo
+            symbol_content = self.symbol_table.generate_report_content(self.base_name)
+
+            # Dividir o conteúdo em linhas e escrever no arquivo
+            lines = symbol_content.split('\n')
+            # Pular as primeiras linhas (cabeçalho duplicado)
+            content_started = False
+            for line in lines:
+                if line.startswith('Entrada:') or content_started or 'símbolo' in line.lower():
+                    content_started = True
+                    file.write(line + '\n')
 
     def get_analysis_status(self) -> bool:
         """
@@ -400,6 +339,7 @@ if __name__ == "__main__":
         success = parser.analyze()
 
         if success:
+            parser.generate_reports()
             stats = parser.get_statistics()
             print(f"\nEstatísticas da análise:")
             print(f"  Tokens processados: {stats['total_tokens']}")
