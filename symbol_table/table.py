@@ -19,7 +19,8 @@ class SymbolTable:
     def initialize(self):
         """
         Inicializa ou reinicializa a tabela de símbolos.
-        Método público que pode ser chamado para resetar a tabela.
+        Metodo público que pode ser chamado para resetar a tabela.
+
         """
         self.symbols = []  # Lista de símbolos com todos os atributos
         self.lookup_table = {}  # Mapeamento lexema -> índice (case-insensitive)

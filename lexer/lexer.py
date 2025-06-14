@@ -76,15 +76,15 @@ class Lexer:
             'GEQ': 'SRS23',  # >=
 
             # Identificadores (Códigos ID01-ID07)
-            'PROGRAMNAME': 'ID01',
-            'VARIABLE': 'ID02',
-            'FUNCTIONNAME': 'ID03',
+            'PROGRAMNAME': 'IDN01',
+            'VARIABLE': 'IDN02',
+            'FUNCTIONNAME': 'IDN03',
 
             # Constantes (Códigos ID04-ID07)
-            'INTCONST': 'ID04',
-            'REALCONST': 'ID05',
-            'STRINGCONST': 'ID06',
-            'CHARCONST': 'ID07',
+            'INTCONST': 'IDN04',
+            'REALCONST': 'IDN05',
+            'STRINGCONST': 'IDN06',
+            'CHARCONST': 'IDN07',
 
             # Submáquinas (Códigos SUB01-SUBNN)
             'SUBMACHINE1': 'SUB01',
