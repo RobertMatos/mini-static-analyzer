@@ -1,6 +1,7 @@
 """
 Tabela de Símbolos para o Static Checker CangaCode2025-1
 Responsável por gerenciar apenas identificadores (não palavras reservadas)
+Formatação conforme especificação do projeto (arquivo PDF)
 """
 
 
@@ -90,6 +91,7 @@ class SymbolTable:
     def _determine_symbol_type(self, atom_code):
         """
         Determina o tipo do símbolo baseado no código do átomo.
+        Conforme especificação do PDF.
 
         Args:
             atom_code (int): Código do átomo
@@ -98,11 +100,11 @@ class SymbolTable:
             str: Tipo do símbolo
         """
         type_mapping = {
-            2: 'PROGRAM_NAME',      # PROGRAMNAME
-            18: 'FUNCTION_NAME',    # FUNCTYPE/FUNCTIONNAME
-            49: 'VARIABLE'          # VARIABLE
+            2: 'nome de programa',        # PROGRAMNAME
+            18: 'nome de função',         # FUNCTIONNAME
+            49: 'nome de variável'        # VARIABLE
         }
-        return type_mapping.get(atom_code, 'UNKNOWN')
+        return type_mapping.get(atom_code, 'tipo desconhecido')
 
     def _update_line(self, index, line_number):
         """
@@ -179,7 +181,7 @@ class SymbolTable:
 
     def generate_report_content(self, base_filename):
         """
-        Gera o conteúdo do relatório da tabela de símbolos.
+        Gera o conteúdo do relatório da tabela de símbolos conforme especificação do PDF.
 
         Args:
             base_filename (str): Nome base do arquivo (sem extensão)
@@ -188,64 +190,28 @@ class SymbolTable:
             str: Conteúdo formatado do relatório
         """
         if self.is_empty():
-            return self._generate_empty_report_content(base_filename)
+            return "Nenhum símbolo encontrado na análise."
 
         lines = []
 
-        # Cabeçalho da tabela
-        lines.append("SÍMBOLOS ENCONTRADOS:")
-        lines.append("-" * 100)
-        lines.append(f"{'Entrada':<8} {'Código':<8} {'Lexema':<20} {'TamOrig':<8} {'TamTrunc':<9} {'Tipo':<15} {'Linhas':<15}")
-        lines.append("-" * 100)
-
-        # Dados dos símbolos
+        # Formato conforme exemplo do PDF
         for symbol in self.symbols:
-            lines_str = ','.join(map(str, symbol['lines']))
-            lines.append(
-                f"{symbol['entry_number']:<8} "
-                f"{symbol['atom_code']:<8} "
-                f"{symbol['lexeme']:<20} "
-                f"{symbol['original_length']:<8} "
-                f"{symbol['truncated_length']:<9} "
-                f"{symbol['symbol_type']:<15} "
-                f"{lines_str:<15}"
-            )
+            lines.append(f"Entrada: {symbol['entry_number']}")
+            lines.append(f"    Lexema: {symbol['lexeme']}")
+            lines.append(f"    Código átomo: {symbol['atom_code']}")
+            lines.append(f"    Tamanho original: {symbol['original_length']}")
+            lines.append(f"    Tamanho após truncamento: {symbol['truncated_length']}")
+            lines.append(f"    Tipo: {symbol['symbol_type']}")
 
-        lines.append("-" * 100)
-        lines.append(f"Total de símbolos: {len(self.symbols)}")
+            # Formatação das linhas de ocorrência
+            lines_str = ', '.join(map(str, symbol['lines']))
+            if len(symbol['lines']) == 1:
+                lines.append(f"    Linha de definição: {lines_str}")
+            else:
+                lines.append(f"    Linhas de definição: {lines_str}")
 
-        # Estatísticas por tipo
-        type_counts = {}
-        for symbol in self.symbols:
-            symbol_type = symbol['symbol_type']
-            type_counts[symbol_type] = type_counts.get(symbol_type, 0) + 1
+            lines.append("")  # Linha em branco entre entradas
 
-        if type_counts:
-            lines.append("\nEstatísticas por tipo:")
-            for symbol_type, count in sorted(type_counts.items()):
-                lines.append(f"  {symbol_type}: {count}")
-
-        return '\n'.join(lines)
-
-    def _generate_empty_report_content(self, base_filename):
-        """
-        Gera conteúdo do relatório quando a tabela está vazia.
-
-        Args:
-            base_filename (str): Nome base do arquivo
-
-        Returns:
-            str: Conteúdo do relatório vazio
-        """
-        lines = [
-            "SÍMBOLOS ENCONTRADOS:",
-            "-" * 100,
-            f"{'Entrada':<8} {'Código':<8} {'Lexema':<20} {'TamOrig':<8} {'TamTrunc':<9} {'Tipo':<15} {'Linhas':<15}",
-            "-" * 100,
-            "(Nenhum símbolo encontrado)",
-            "-" * 100,
-            "Total de símbolos: 0"
-        ]
         return '\n'.join(lines)
 
     def print_debug_info(self):

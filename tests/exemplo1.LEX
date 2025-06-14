@@ -1,179 +1,171 @@
-============================================================
-RELATÓRIO DA ANÁLISE LÉXICA
-============================================================
-Arquivo analisado: exemplo1.251
-Equipe: [CÓDIGO_DA_EQUIPE]
-Integrantes:
-  - [NOME] - [EMAIL] - [TELEFONE]
-  - [NOME] - [EMAIL] - [TELEFONE]
-============================================================
+Código da Equipe: EQ03
+Componentes:
+    Gabriel de Abreu Farias Azevedo; gabriel.azevedo@ucsal.edu.br; (71)99210-5078
+    Rebeca Bezerra Gonçalves dos Santos; rebecabezerra.santos@ucsal.edu.br; (71)99628-2261
+    Sarah Evellyn Ferreira Nogueira; sarahevellyn.nogueira@ucsal.edu.br; (71)99675-0337
+    Robert Valadares de Matos; robert.matos@ucsal.edu.br; (71)98189-1008
 
-TOKENS ENCONTRADOS:
-------------------------------------------------------------
-Lexeme               Código   ÍndiceTabSimb Linha 
-------------------------------------------------------------
-PROGRAM              PRS14    -            1     
-CALCULADORASIMPLES   ID01     1            1     
-DECLARATIONS         PRS12    -            2     
-VARTYPE              PRS09    -            3     
-INTEGER              PRS01    -            3     
-:                    SRS03    -            3     
-CONTADOR             ID02     2            3     
-,                    SRS02    -            3     
-LIMITE               ID02     3            3     
-,                    SRS02    -            3     
-RESULTADO            ID02     4            3     
-VARTYPE              PRS09    -            4     
-REAL                 PRS02    -            4     
-:                    SRS03    -            4     
-NOTA1                ID02     5            4     
-,                    SRS02    -            4     
-NOTA2                ID02     6            4     
-,                    SRS02    -            4     
-MEDIAFINAL           ID02     7            4     
-VARTYPE              PRS09    -            5     
-STRING               PRS04    -            5     
-:                    SRS03    -            5     
-NOMEALUNO            ID02     8            5     
-,                    SRS02    -            5     
-DISCIPLINA           ID02     9            5     
-VARTYPE              PRS09    -            6     
-BOOLEAN              PRS05    -            6     
-:                    SRS03    -            6     
-APROVADO             ID02     10           6     
-VARTYPE              PRS09    -            7     
-CHARACTER            PRS03    -            7     
-:                    SRS03    -            7     
-OPCAO                ID02     11           7     
-VARTYPE              PRS09    -            8     
-INTEGER              PRS01    -            8     
-[                    SRS08    -            8     
-]                    SRS09    -            8     
-:                    SRS03    -            8     
-NUMEROS              ID02     12           8     
-[                    SRS08    -            8     
-50                   ID04     -            8     
-]                    SRS09    -            8     
-VARTYPE              PRS09    -            9     
-REAL                 PRS02    -            9     
-[                    SRS08    -            9     
-]                    SRS09    -            9     
-:                    SRS03    -            9     
-MEDIAS               ID02     13           9     
-[                    SRS08    -            9     
-20                   ID04     -            9     
-]                    SRS09    -            9     
-ENDDECLARARIONS      ID02     14           10    
-FUNCTIONS            PRS16    -            11    
-FUNCTYPE             PRS10    -            12    
-INTEGER              PRS01    -            12    
-:                    SRS03    -            12    
-SOMAR                ID03     15           12    
-(                    SRS06    -            12    
-PARAMTYPE            PRS11    -            12    
-INTEGER              PRS01    -            12    
-:                    SRS03    -            12    
-NUM1                 ID02     16           12    
-;                    SRS01    -            12    
-PARAMTYPE            PRS11    -            12    
-INTEGER              PRS01    -            12    
-:                    SRS03    -            12    
-NUM2                 ID02     17           12    
-)                    SRS07    -            12    
-{                    SRS10    -            13    
-RESULTADO            ID02     4            16    
-:=                   SRS04    -            16    
-NUM1                 ID02     16           16    
-+                    SRS14    -            16    
-NUM2                 ID02     17           16    
-RETURN               PRS19    -            17    
-RESULTADO            ID02     4            17    
-}                    SRS11    -            18    
-ENDFUNCTION          PRS18    -            19    
-;                    SRS01    -            19    
-FUNCTYPE             PRS10    -            21    
-REAL                 PRS02    -            21    
-:                    SRS03    -            21    
-CALCULARMEDIA        ID03     18           21    
-(                    SRS06    -            21    
-PARAMTYPE            PRS11    -            21    
-REAL                 PRS02    -            21    
-:                    SRS03    -            21    
-N1                   ID02     19           21    
-;                    SRS01    -            21    
-PARAMTYPE            PRS11    -            21    
-REAL                 PRS02    -            21    
-:                    SRS03    -            21    
-N2                   ID02     20           21    
-;                    SRS01    -            21    
-PARAMTYPE            PRS11    -            21    
-REAL                 PRS02    -            21    
-:                    SRS03    -            21    
-N3                   ID02     21           21    
-)                    SRS07    -            21    
-{                    SRS10    -            22    
-RETURN               PRS19    -            24    
-(                    SRS06    -            24    
-N1                   ID02     19           24    
-+                    SRS14    -            24    
-N2                   ID02     20           24    
-+                    SRS14    -            24    
-N3                   ID02     21           24    
-)                    SRS07    -            24    
-/                    SRS16    -            24    
-3.0                  ID05     -            24    
-}                    SRS11    -            25    
-ENDFUNCTION          PRS18    -            26    
-;                    SRS01    -            26    
-FUNCTYPE             PRS10    -            28    
-VOID                 PRS06    -            28    
-:                    SRS03    -            28    
-PROCESSARDADOS       ID03     22           28    
-(                    SRS06    -            28    
-)                    SRS07    -            28    
-{                    SRS10    -            29    
-CONTADOR             ID02     2            30    
-:=                   SRS04    -            30    
-0                    ID04     -            30    
-LIMITE               ID02     3            31    
-:=                   SRS04    -            31    
-100                  ID04     -            31    
-IF                   PRS20    -            33    
-(                    SRS06    -            33    
-CONTADOR             ID02     2            33    
-<                    SRS20    -            33    
-LIMITE               ID02     3            33    
-)                    SRS07    -            33    
-PRINT                PRS26    -            34    
-CONTADOR             ID02     2            34    
-ENDIF                PRS22    -            35    
-WHILE                PRS23    -            37    
-(                    SRS06    -            37    
-CONTADOR             ID02     2            37    
-<=                   SRS21    -            37    
-LIMITE               ID02     3            37    
-)                    SRS07    -            37    
-{                    SRS10    -            38    
-CONTADOR             ID02     2            39    
-:=                   SRS04    -            39    
-CONTADOR             ID02     2            39    
-+                    SRS14    -            39    
-1                    ID04     -            39    
-;                    SRS01    -            39    
-IF                   PRS20    -            40    
-(                    SRS06    -            40    
-CONTADOR             ID02     2            40    
->=                   SRS23    -            40    
-50                   ID04     -            40    
-)                    SRS07    -            40    
-BREAK                PRS25    -            41    
-ENDIF                PRS22    -            42    
-}                    SRS11    -            43    
-ENDWHILE             PRS24    -            44    
-}                    SRS11    -            48    
-ENDFUNCTION          PRS18    -            49    
-ENDFUNCTIONS         PRS17    -            50    
-ENDPROGRAM           PRS15    -            51    
-------------------------------------------------------------
-Total de tokens: 162
-Total de identificadores: 39
+RELATÓRIO DA ANÁLISE LÉXICA. Texto fonte analisado: exemplo1.251
+
+Lexeme: PROGRAM, Código: PRS14, ÍndiceTabSimb: -, Linha: 1.
+Lexeme: CALCULADORASIMPLES, Código: ID01, ÍndiceTabSimb: 1, Linha: 1.
+Lexeme: DECLARATIONS, Código: PRS12, ÍndiceTabSimb: -, Linha: 2.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 3.
+Lexeme: INTEGER, Código: PRS01, ÍndiceTabSimb: -, Linha: 3.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 3.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 3.
+Lexeme: ,, Código: SRS02, ÍndiceTabSimb: -, Linha: 3.
+Lexeme: LIMITE, Código: ID02, ÍndiceTabSimb: 3, Linha: 3.
+Lexeme: ,, Código: SRS02, ÍndiceTabSimb: -, Linha: 3.
+Lexeme: RESULTADO, Código: ID02, ÍndiceTabSimb: 4, Linha: 3.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 4.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 4.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 4.
+Lexeme: NOTA1, Código: ID02, ÍndiceTabSimb: 5, Linha: 4.
+Lexeme: ,, Código: SRS02, ÍndiceTabSimb: -, Linha: 4.
+Lexeme: NOTA2, Código: ID02, ÍndiceTabSimb: 6, Linha: 4.
+Lexeme: ,, Código: SRS02, ÍndiceTabSimb: -, Linha: 4.
+Lexeme: MEDIAFINAL, Código: ID02, ÍndiceTabSimb: 7, Linha: 4.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 5.
+Lexeme: STRING, Código: PRS04, ÍndiceTabSimb: -, Linha: 5.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 5.
+Lexeme: NOMEALUNO, Código: ID02, ÍndiceTabSimb: 8, Linha: 5.
+Lexeme: ,, Código: SRS02, ÍndiceTabSimb: -, Linha: 5.
+Lexeme: DISCIPLINA, Código: ID02, ÍndiceTabSimb: 9, Linha: 5.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 6.
+Lexeme: BOOLEAN, Código: PRS05, ÍndiceTabSimb: -, Linha: 6.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 6.
+Lexeme: APROVADO, Código: ID02, ÍndiceTabSimb: 10, Linha: 6.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 7.
+Lexeme: CHARACTER, Código: PRS03, ÍndiceTabSimb: -, Linha: 7.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 7.
+Lexeme: OPCAO, Código: ID02, ÍndiceTabSimb: 11, Linha: 7.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: INTEGER, Código: PRS01, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: [, Código: SRS08, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: ], Código: SRS09, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: NUMEROS, Código: ID02, ÍndiceTabSimb: 12, Linha: 8.
+Lexeme: [, Código: SRS08, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: 50, Código: ID04, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: ], Código: SRS09, ÍndiceTabSimb: -, Linha: 8.
+Lexeme: VARTYPE, Código: PRS09, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: [, Código: SRS08, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: ], Código: SRS09, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: MEDIAS, Código: ID02, ÍndiceTabSimb: 13, Linha: 9.
+Lexeme: [, Código: SRS08, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: 20, Código: ID04, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: ], Código: SRS09, ÍndiceTabSimb: -, Linha: 9.
+Lexeme: ENDDECLARARIONS, Código: ID02, ÍndiceTabSimb: 14, Linha: 10.
+Lexeme: FUNCTIONS, Código: PRS16, ÍndiceTabSimb: -, Linha: 11.
+Lexeme: FUNCTYPE, Código: PRS10, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: INTEGER, Código: PRS01, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: SOMAR, Código: ID03, ÍndiceTabSimb: 15, Linha: 12.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: PARAMTYPE, Código: PRS11, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: INTEGER, Código: PRS01, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: NUM1, Código: ID02, ÍndiceTabSimb: 16, Linha: 12.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: PARAMTYPE, Código: PRS11, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: INTEGER, Código: PRS01, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: NUM2, Código: ID02, ÍndiceTabSimb: 17, Linha: 12.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 12.
+Lexeme: {, Código: SRS10, ÍndiceTabSimb: -, Linha: 13.
+Lexeme: RESULTADO, Código: ID02, ÍndiceTabSimb: 4, Linha: 16.
+Lexeme: :=, Código: SRS04, ÍndiceTabSimb: -, Linha: 16.
+Lexeme: NUM1, Código: ID02, ÍndiceTabSimb: 16, Linha: 16.
+Lexeme: +, Código: SRS14, ÍndiceTabSimb: -, Linha: 16.
+Lexeme: NUM2, Código: ID02, ÍndiceTabSimb: 17, Linha: 16.
+Lexeme: RETURN, Código: PRS19, ÍndiceTabSimb: -, Linha: 17.
+Lexeme: RESULTADO, Código: ID02, ÍndiceTabSimb: 4, Linha: 17.
+Lexeme: }, Código: SRS11, ÍndiceTabSimb: -, Linha: 18.
+Lexeme: ENDFUNCTION, Código: PRS18, ÍndiceTabSimb: -, Linha: 19.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 19.
+Lexeme: FUNCTYPE, Código: PRS10, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: CALCULARMEDIA, Código: ID03, ÍndiceTabSimb: 18, Linha: 21.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: PARAMTYPE, Código: PRS11, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: N1, Código: ID02, ÍndiceTabSimb: 19, Linha: 21.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: PARAMTYPE, Código: PRS11, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: N2, Código: ID02, ÍndiceTabSimb: 20, Linha: 21.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: PARAMTYPE, Código: PRS11, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: REAL, Código: PRS02, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: N3, Código: ID02, ÍndiceTabSimb: 21, Linha: 21.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 21.
+Lexeme: {, Código: SRS10, ÍndiceTabSimb: -, Linha: 22.
+Lexeme: RETURN, Código: PRS19, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: N1, Código: ID02, ÍndiceTabSimb: 19, Linha: 24.
+Lexeme: +, Código: SRS14, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: N2, Código: ID02, ÍndiceTabSimb: 20, Linha: 24.
+Lexeme: +, Código: SRS14, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: N3, Código: ID02, ÍndiceTabSimb: 21, Linha: 24.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: /, Código: SRS16, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: 3.0, Código: ID05, ÍndiceTabSimb: -, Linha: 24.
+Lexeme: }, Código: SRS11, ÍndiceTabSimb: -, Linha: 25.
+Lexeme: ENDFUNCTION, Código: PRS18, ÍndiceTabSimb: -, Linha: 26.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 26.
+Lexeme: FUNCTYPE, Código: PRS10, ÍndiceTabSimb: -, Linha: 28.
+Lexeme: VOID, Código: PRS06, ÍndiceTabSimb: -, Linha: 28.
+Lexeme: :, Código: SRS03, ÍndiceTabSimb: -, Linha: 28.
+Lexeme: PROCESSARDADOS, Código: ID03, ÍndiceTabSimb: 22, Linha: 28.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 28.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 28.
+Lexeme: {, Código: SRS10, ÍndiceTabSimb: -, Linha: 29.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 30.
+Lexeme: :=, Código: SRS04, ÍndiceTabSimb: -, Linha: 30.
+Lexeme: 0, Código: ID04, ÍndiceTabSimb: -, Linha: 30.
+Lexeme: LIMITE, Código: ID02, ÍndiceTabSimb: 3, Linha: 31.
+Lexeme: :=, Código: SRS04, ÍndiceTabSimb: -, Linha: 31.
+Lexeme: 100, Código: ID04, ÍndiceTabSimb: -, Linha: 31.
+Lexeme: IF, Código: PRS20, ÍndiceTabSimb: -, Linha: 33.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 33.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 33.
+Lexeme: <, Código: SRS20, ÍndiceTabSimb: -, Linha: 33.
+Lexeme: LIMITE, Código: ID02, ÍndiceTabSimb: 3, Linha: 33.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 33.
+Lexeme: PRINT, Código: PRS26, ÍndiceTabSimb: -, Linha: 34.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 34.
+Lexeme: ENDIF, Código: PRS22, ÍndiceTabSimb: -, Linha: 35.
+Lexeme: WHILE, Código: PRS23, ÍndiceTabSimb: -, Linha: 37.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 37.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 37.
+Lexeme: <=, Código: SRS21, ÍndiceTabSimb: -, Linha: 37.
+Lexeme: LIMITE, Código: ID02, ÍndiceTabSimb: 3, Linha: 37.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 37.
+Lexeme: {, Código: SRS10, ÍndiceTabSimb: -, Linha: 38.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 39.
+Lexeme: :=, Código: SRS04, ÍndiceTabSimb: -, Linha: 39.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 39.
+Lexeme: +, Código: SRS14, ÍndiceTabSimb: -, Linha: 39.
+Lexeme: 1, Código: ID04, ÍndiceTabSimb: -, Linha: 39.
+Lexeme: ;, Código: SRS01, ÍndiceTabSimb: -, Linha: 39.
+Lexeme: IF, Código: PRS20, ÍndiceTabSimb: -, Linha: 40.
+Lexeme: (, Código: SRS06, ÍndiceTabSimb: -, Linha: 40.
+Lexeme: CONTADOR, Código: ID02, ÍndiceTabSimb: 2, Linha: 40.
+Lexeme: >=, Código: SRS23, ÍndiceTabSimb: -, Linha: 40.
+Lexeme: 50, Código: ID04, ÍndiceTabSimb: -, Linha: 40.
+Lexeme: ), Código: SRS07, ÍndiceTabSimb: -, Linha: 40.
+Lexeme: BREAK, Código: PRS25, ÍndiceTabSimb: -, Linha: 41.
+Lexeme: ENDIF, Código: PRS22, ÍndiceTabSimb: -, Linha: 42.
+Lexeme: }, Código: SRS11, ÍndiceTabSimb: -, Linha: 43.
+Lexeme: ENDWHILE, Código: PRS24, ÍndiceTabSimb: -, Linha: 44.
+Lexeme: }, Código: SRS11, ÍndiceTabSimb: -, Linha: 48.
+Lexeme: ENDFUNCTION, Código: PRS18, ÍndiceTabSimb: -, Linha: 49.
+Lexeme: ENDFUNCTIONS, Código: PRS17, ÍndiceTabSimb: -, Linha: 50.
+Lexeme: ENDPROGRAM, Código: PRS15, ÍndiceTabSimb: -, Linha: 51.

@@ -247,68 +247,65 @@ class Parser:
 
     def _generate_lex_report(self):
         """
-        Gera o relatório da análise léxica (.LEX).
+        Gera o relatório da análise léxica (.LEX) conforme exemplo visual fornecido.
         """
         lex_filename = self.directory / f"{self.base_name}.LEX"
 
         with open(lex_filename, 'w', encoding='utf-8') as file:
-            # Cabeçalho
-            file.write("=" * 60 + "\n")
-            file.write("RELATÓRIO DA ANÁLISE LÉXICA\n")
-            file.write("=" * 60 + "\n")
-            file.write(f"Arquivo analisado: {self.base_name}.251\n")
-            file.write("Equipe: [CÓDIGO_DA_EQUIPE]\n")
-            file.write("Integrantes:\n")
-            file.write("  - [NOME] - [EMAIL] - [TELEFONE]\n")
-            file.write("  - [NOME] - [EMAIL] - [TELEFONE]\n")
-            file.write("=" * 60 + "\n\n")
+            # Cabeçalho fixo conforme imagem
+            file.write("Código da Equipe: EQ03\n")
+            file.write("Componentes:\n")
+            file.write("    Gabriel de Abreu Farias Azevedo; gabriel.azevedo@ucsal.edu.br; (71)99210-5078\n")
+            file.write("    Rebeca Bezerra Gonçalves dos Santos; rebecabezerra.santos@ucsal.edu.br; (71)99628-2261\n")
+            file.write("    Sarah Evellyn Ferreira Nogueira; sarahevellyn.nogueira@ucsal.edu.br; (71)99675-0337\n")
+            file.write("    Robert Valadares de Matos; robert.matos@ucsal.edu.br; (71)98189-1008\n")
+            file.write("\n")
+            file.write(f"RELATÓRIO DA ANÁLISE LÉXICA. Texto fonte analisado: {self.base_name}.251\n")
+            file.write("\n")
 
-            # Dados dos tokens
-            file.write("TOKENS ENCONTRADOS:\n")
-            file.write("-" * 60 + "\n")
-            file.write(f"{'Lexeme':<20} {'Código':<8} {'ÍndiceTabSimb':<12} {'Linha':<6}\n")
-            file.write("-" * 60 + "\n")
-
+            # Tokens encontrados
             for lexeme, token_code, symbol_index, line_number in self.tokens_found:
-                symbol_idx_str = str(symbol_index) if symbol_index is not None else "-"
-                file.write(f"{lexeme:<20} {token_code:<8} {symbol_idx_str:<12} {line_number:<6}\n")
+                lexeme_str = f"Lexeme: {lexeme},"
+                code_str = f" Código: {token_code},"
+                if symbol_index is not None:
+                    index_str = f" ÍndiceTabSimb: {symbol_index},"
+                else:
+                    index_str = " ÍndiceTabSimb: -,"
+                line_str = f" Linha: {line_number}.\n"
 
-            file.write("-" * 60 + "\n")
-            file.write(f"Total de tokens: {len(self.tokens_found)}\n")
-
-            # Estatísticas adicionais
-            identifiers_count = sum(1 for _, _, symbol_index, _ in self.tokens_found if symbol_index is not None)
-            file.write(f"Total de identificadores: {identifiers_count}\n")
+                file.write(lexeme_str + code_str + index_str + line_str)
 
     def _generate_tab_report(self):
         """
-        Gera o relatório da tabela de símbolos (.TAB).
+        Gera o relatório da tabela de símbolos (.TAB) conforme especificação do exemplo fornecido.
         """
         tab_filename = self.directory / f"{self.base_name}.TAB"
 
         with open(tab_filename, 'w', encoding='utf-8') as file:
             # Cabeçalho
-            file.write("=" * 80 + "\n")
-            file.write("RELATÓRIO DA TABELA DE SÍMBOLOS\n")
-            file.write("=" * 80 + "\n")
-            file.write(f"Arquivo analisado: {self.base_name}.251\n")
-            file.write("Equipe: [CÓDIGO_DA_EQUIPE]\n")
-            file.write("Integrantes:\n")
-            file.write("  - [NOME] - [EMAIL] - [TELEFONE]\n")
-            file.write("  - [NOME] - [EMAIL] - [TELEFONE]\n")
-            file.write("=" * 80 + "\n\n")
+            file.write("Codigo da Equipe: EQ03\n")
+            file.write("Componentes:\n")
+            file.write("    Gabriel de Abreu Farias Azevedo; gabriel.azevedo@ucsal.edu.br; (71)99210-5078\n")
+            file.write("    Rebeca Bezerra Gonçalves dos Santos; rebecabezerra.santos@ucsal.edu.br; (71)99628-2261\n")
+            file.write("    Sarah Evellyn Ferreira Nogueira; sarahevellyn.nogueira@ucsal.edu.br; (71)99675-0337\n")
+            file.write("    Robert Valadares de Matos; robert.matos@ucsal.edu.br; (71)98189-1008\n")
+            file.write("\n")
+            file.write(f"RELATÓRIO DA TABELA DE SÍMBOLOS. Texto fonte analisado: {self.base_name}.251\n")
+            file.write("\n")
 
-            # Usar método da tabela de símbolos para gerar conteúdo
-            symbol_content = self.symbol_table.generate_report_content(self.base_name)
+            if self.symbol_table.is_empty():
+                file.write("Nenhum símbolo encontrado na análise.\n")
+                return
 
-            # Dividir o conteúdo em linhas e escrever no arquivo
-            lines = symbol_content.split('\n')
-            # Pular as primeiras linhas (cabeçalho duplicado)
-            content_started = False
-            for line in lines:
-                if line.startswith('Entrada:') or content_started or 'símbolo' in line.lower():
-                    content_started = True
-                    file.write(line + '\n')
+            symbols = self.symbol_table.get_all_symbols()
+
+            for symbol in symbols:
+                file.write(
+                    f"Entrada: {symbol['entry_number']}, Codigo: {symbol['atom_code']}, Lexeme: {symbol['lexeme'].upper()},\n")
+                file.write(
+                    f"QtdCharAntesTrunc: {symbol['original_length']}, QtdCharDepoisTrunc: {symbol['truncated_length']},\n")
+                file.write(f"TipoSimb: {symbol['symbol_type']}, Linhas: {{{', '.join(map(str, symbol['lines']))}}}.\n")
+                file.write("------------------------------------------------------------\n")
 
     def get_analysis_status(self) -> bool:
         """

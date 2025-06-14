@@ -1,43 +1,97 @@
-================================================================================
-RELATÓRIO DA TABELA DE SÍMBOLOS
-================================================================================
-Arquivo analisado: exemplo1.251
-Equipe: [CÓDIGO_DA_EQUIPE]
-Integrantes:
-  - [NOME] - [EMAIL] - [TELEFONE]
-  - [NOME] - [EMAIL] - [TELEFONE]
-================================================================================
+Codigo da Equipe: EQ03
+Componentes:
+    Gabriel de Abreu Farias Azevedo; gabriel.azevedo@ucsal.edu.br; (71)99210-5078
+    Rebeca Bezerra Gonçalves dos Santos; rebecabezerra.santos@ucsal.edu.br; (71)99628-2261
+    Sarah Evellyn Ferreira Nogueira; sarahevellyn.nogueira@ucsal.edu.br; (71)99675-0337
+    Robert Valadares de Matos; robert.matos@ucsal.edu.br; (71)98189-1008
 
-SÍMBOLOS ENCONTRADOS:
-----------------------------------------------------------------------------------------------------
-Entrada  Código   Lexema               TamOrig  TamTrunc  Tipo            Linhas         
-----------------------------------------------------------------------------------------------------
-1        2        CALCULADORASIMPLES   18       18        PROGRAM_NAME    1              
-2        49       CONTADOR             8        8         VARIABLE        3,30,33,34,37,39,40
-3        49       LIMITE               6        6         VARIABLE        3,31,33,37     
-4        49       RESULTADO            9        9         VARIABLE        3,16,17        
-5        49       NOTA1                5        5         VARIABLE        4              
-6        49       NOTA2                5        5         VARIABLE        4              
-7        49       MEDIAFINAL           10       10        VARIABLE        4              
-8        49       NOMEALUNO            9        9         VARIABLE        5              
-9        49       DISCIPLINA           10       10        VARIABLE        5              
-10       49       APROVADO             8        8         VARIABLE        6              
-11       49       OPCAO                5        5         VARIABLE        7              
-12       49       NUMEROS              7        7         VARIABLE        8              
-13       49       MEDIAS               6        6         VARIABLE        9              
-14       49       ENDDECLARARIONS      15       15        VARIABLE        10             
-15       18       SOMAR                5        5         FUNCTION_NAME   12             
-16       49       NUM1                 4        4         VARIABLE        12,16          
-17       49       NUM2                 4        4         VARIABLE        12,16          
-18       18       CALCULARMEDIA        13       13        FUNCTION_NAME   21             
-19       49       N1                   2        2         VARIABLE        21,24          
-20       49       N2                   2        2         VARIABLE        21,24          
-21       49       N3                   2        2         VARIABLE        21,24          
-22       18       PROCESSARDADOS       14       14        FUNCTION_NAME   28             
-----------------------------------------------------------------------------------------------------
-Total de símbolos: 22
+RELATÓRIO DA TABELA DE SÍMBOLOS. Texto fonte analisado: exemplo1.251
 
-Estatísticas por tipo:
-  FUNCTION_NAME: 3
-  PROGRAM_NAME: 1
-  VARIABLE: 18
+Entrada: 1, Codigo: 2, Lexeme: CALCULADORASIMPLES,
+QtdCharAntesTrunc: 18, QtdCharDepoisTrunc: 18,
+TipoSimb: nome de programa, Linhas: {1}.
+------------------------------------------------------------
+Entrada: 2, Codigo: 49, Lexeme: CONTADOR,
+QtdCharAntesTrunc: 8, QtdCharDepoisTrunc: 8,
+TipoSimb: nome de variável, Linhas: {3, 30, 33, 34, 37, 39, 40}.
+------------------------------------------------------------
+Entrada: 3, Codigo: 49, Lexeme: LIMITE,
+QtdCharAntesTrunc: 6, QtdCharDepoisTrunc: 6,
+TipoSimb: nome de variável, Linhas: {3, 31, 33, 37}.
+------------------------------------------------------------
+Entrada: 4, Codigo: 49, Lexeme: RESULTADO,
+QtdCharAntesTrunc: 9, QtdCharDepoisTrunc: 9,
+TipoSimb: nome de variável, Linhas: {3, 16, 17}.
+------------------------------------------------------------
+Entrada: 5, Codigo: 49, Lexeme: NOTA1,
+QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
+TipoSimb: nome de variável, Linhas: {4}.
+------------------------------------------------------------
+Entrada: 6, Codigo: 49, Lexeme: NOTA2,
+QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
+TipoSimb: nome de variável, Linhas: {4}.
+------------------------------------------------------------
+Entrada: 7, Codigo: 49, Lexeme: MEDIAFINAL,
+QtdCharAntesTrunc: 10, QtdCharDepoisTrunc: 10,
+TipoSimb: nome de variável, Linhas: {4}.
+------------------------------------------------------------
+Entrada: 8, Codigo: 49, Lexeme: NOMEALUNO,
+QtdCharAntesTrunc: 9, QtdCharDepoisTrunc: 9,
+TipoSimb: nome de variável, Linhas: {5}.
+------------------------------------------------------------
+Entrada: 9, Codigo: 49, Lexeme: DISCIPLINA,
+QtdCharAntesTrunc: 10, QtdCharDepoisTrunc: 10,
+TipoSimb: nome de variável, Linhas: {5}.
+------------------------------------------------------------
+Entrada: 10, Codigo: 49, Lexeme: APROVADO,
+QtdCharAntesTrunc: 8, QtdCharDepoisTrunc: 8,
+TipoSimb: nome de variável, Linhas: {6}.
+------------------------------------------------------------
+Entrada: 11, Codigo: 49, Lexeme: OPCAO,
+QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
+TipoSimb: nome de variável, Linhas: {7}.
+------------------------------------------------------------
+Entrada: 12, Codigo: 49, Lexeme: NUMEROS,
+QtdCharAntesTrunc: 7, QtdCharDepoisTrunc: 7,
+TipoSimb: nome de variável, Linhas: {8}.
+------------------------------------------------------------
+Entrada: 13, Codigo: 49, Lexeme: MEDIAS,
+QtdCharAntesTrunc: 6, QtdCharDepoisTrunc: 6,
+TipoSimb: nome de variável, Linhas: {9}.
+------------------------------------------------------------
+Entrada: 14, Codigo: 49, Lexeme: ENDDECLARARIONS,
+QtdCharAntesTrunc: 15, QtdCharDepoisTrunc: 15,
+TipoSimb: nome de variável, Linhas: {10}.
+------------------------------------------------------------
+Entrada: 15, Codigo: 18, Lexeme: SOMAR,
+QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
+TipoSimb: nome de função, Linhas: {12}.
+------------------------------------------------------------
+Entrada: 16, Codigo: 49, Lexeme: NUM1,
+QtdCharAntesTrunc: 4, QtdCharDepoisTrunc: 4,
+TipoSimb: nome de variável, Linhas: {12, 16}.
+------------------------------------------------------------
+Entrada: 17, Codigo: 49, Lexeme: NUM2,
+QtdCharAntesTrunc: 4, QtdCharDepoisTrunc: 4,
+TipoSimb: nome de variável, Linhas: {12, 16}.
+------------------------------------------------------------
+Entrada: 18, Codigo: 18, Lexeme: CALCULARMEDIA,
+QtdCharAntesTrunc: 13, QtdCharDepoisTrunc: 13,
+TipoSimb: nome de função, Linhas: {21}.
+------------------------------------------------------------
+Entrada: 19, Codigo: 49, Lexeme: N1,
+QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
+TipoSimb: nome de variável, Linhas: {21, 24}.
+------------------------------------------------------------
+Entrada: 20, Codigo: 49, Lexeme: N2,
+QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
+TipoSimb: nome de variável, Linhas: {21, 24}.
+------------------------------------------------------------
+Entrada: 21, Codigo: 49, Lexeme: N3,
+QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
+TipoSimb: nome de variável, Linhas: {21, 24}.
+------------------------------------------------------------
+Entrada: 22, Codigo: 18, Lexeme: PROCESSARDADOS,
+QtdCharAntesTrunc: 14, QtdCharDepoisTrunc: 14,
+TipoSimb: nome de função, Linhas: {28}.
+------------------------------------------------------------
