@@ -48,8 +48,9 @@ class Parser:
         self.current_position = 0
         self.tokens_found: List[Tuple[str, str, Optional[int], int]] = []
 
-        # Códigos de átomos que representam identificadores (CORRIGIDO)
-        self.identifier_codes = {'IND01', 'IND02', 'IND03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
+        # CORREÇÃO: Códigos de átomos que representam identificadores
+        # Usando os códigos corretos do lexer (ID01, ID02, ID03)
+        self.identifier_codes = {'ID01', 'ID02', 'ID03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
 
         # Controle de escopo (preparado para expansão futura)
         self.scope_stack = ['global']
@@ -175,12 +176,21 @@ class Parser:
         Returns:
             Índice na tabela de símbolos (se aplicável) ou None
         """
-        # Verificar se é um identificador (codes IND01, IND02, IND03)
+        # Verificar se é um identificador (codes ID01, ID02, ID03)
         if token_code in self.identifier_codes:
             print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
+            # CORREÇÃO: Converter código string para inteiro para a tabela de símbolos
+            code_mapping = {
+                'ID01': 2,   # PROGRAMNAME
+                'ID02': 49,  # VARIABLE
+                'ID03': 18   # FUNCTIONNAME
+            }
+
+            numeric_code = code_mapping.get(token_code, 0)
+
             # Inserir na tabela de símbolos
-            symbol_index = self.symbol_table.insert(lexeme, token_code, line_number)
+            symbol_index = self.symbol_table.insert(lexeme, numeric_code, line_number)
             print(f"DEBUG: Identificador '{lexeme}' inserido com índice {symbol_index}")
             return symbol_index
 
@@ -200,7 +210,7 @@ class Parser:
             self._enter_scope('functions')
         elif lexeme.upper() == 'ENDFUNCTIONS':
             self._exit_scope()
-        elif token_code == 'IND03':  # functionName
+        elif token_code == 'ID03':  # functionName
             self._enter_scope(f'function_{lexeme}')
         elif lexeme.upper() == 'ENDFUNCTION':
             self._exit_scope()

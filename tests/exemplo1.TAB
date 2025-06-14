@@ -12,6 +12,32 @@ SÍMBOLOS ENCONTRADOS:
 ----------------------------------------------------------------------------------------------------
 Entrada  Código   Lexema               TamOrig  TamTrunc  Tipo            Linhas         
 ----------------------------------------------------------------------------------------------------
-(Nenhum símbolo encontrado)
+1        2        CALCULADORASIMPLES   18       18        PROGRAM_NAME    1              
+2        49       CONTADOR             8        8         VARIABLE        3,30,33,34,37,39,40
+3        49       LIMITE               6        6         VARIABLE        3,31,33,37     
+4        49       RESULTADO            9        9         VARIABLE        3,16,17        
+5        49       NOTA1                5        5         VARIABLE        4              
+6        49       NOTA2                5        5         VARIABLE        4              
+7        49       MEDIAFINAL           10       10        VARIABLE        4              
+8        49       NOMEALUNO            9        9         VARIABLE        5              
+9        49       DISCIPLINA           10       10        VARIABLE        5              
+10       49       APROVADO             8        8         VARIABLE        6              
+11       49       OPCAO                5        5         VARIABLE        7              
+12       49       NUMEROS              7        7         VARIABLE        8              
+13       49       MEDIAS               6        6         VARIABLE        9              
+14       49       ENDDECLARARIONS      15       15        VARIABLE        10             
+15       18       SOMAR                5        5         FUNCTION_NAME   12             
+16       49       NUM1                 4        4         VARIABLE        12,16          
+17       49       NUM2                 4        4         VARIABLE        12,16          
+18       18       CALCULARMEDIA        13       13        FUNCTION_NAME   21             
+19       49       N1                   2        2         VARIABLE        21,24          
+20       49       N2                   2        2         VARIABLE        21,24          
+21       49       N3                   2        2         VARIABLE        21,24          
+22       18       PROCESSARDADOS       14       14        FUNCTION_NAME   28             
 ----------------------------------------------------------------------------------------------------
-Total de símbolos: 0
+Total de símbolos: 22
+
+Estatísticas por tipo:
+  FUNCTION_NAME: 3
+  PROGRAM_NAME: 1
+  VARIABLE: 18
