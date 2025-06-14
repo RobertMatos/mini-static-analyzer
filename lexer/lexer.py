@@ -16,8 +16,6 @@ class Lexer:
             source_code (str): Código fonte a ser analisado
         """
         self.source_code = source_code
-        self.line_number = 1
-        self.position = 0
         self.tokens_generated = []
 
         # Mapeamento de códigos dos átomos conforme Apêndice A
@@ -139,7 +137,13 @@ class Lexer:
 
         # Construir o lexer
         self.lexer = lex.lex(module=self)
-        self.lexer.input(self._preprocess_source(source_code))
+
+        # CORREÇÃO: Processar código com numeração de linha consistente
+        processed_source = self._preprocess_source(source_code)
+        self.lexer.input(processed_source)
+
+        # Inicializar contador de linha do PLY
+        self.lexer.lineno = 1
 
     def _preprocess_source(self, source):
         """
@@ -267,8 +271,8 @@ class Lexer:
 
     def t_newline(self, t):
         r'\n+'
+        # CORREÇÃO: Usar apenas o controle do PLY
         t.lexer.lineno += len(t.value)
-        self.line_number += len(t.value)
 
     def t_error(self, t):
         """
@@ -292,11 +296,14 @@ class Lexer:
         # Obter código do átomo
         token_code = self.token_codes.get(token.type, 'UNKNOWN')
 
+        # CORREÇÃO: Usar sempre t.lineno (controle do PLY)
+        line_number = token.lineno
+
         # Armazenar token gerado para análise de contexto
-        token_info = (token.type, token.value, token.lineno)
+        token_info = (token.type, token.value, line_number)
         self.tokens_generated.append(token_info)
 
-        return (token_code, token.value, token.lineno)
+        return (token_code, token.value, line_number)
 
     def tokenize_all(self):
         """
@@ -317,30 +324,29 @@ class Lexer:
 # Exemplo de uso
 if __name__ == "__main__":
     # Código fonte de exemplo
-    source_code = """
-    program meuPrograma
-    declarations
-        vartype integer: contador, limite
-        vartype real: media, soma
-    endDeclarations
+    source_code = """program meuPrograma
+declarations
+    vartype integer: contador, limite
+    vartype real: media, soma
+endDeclarations
 
-    functions
-        functype integer: calcular(paramtype integer: x, y)
-            if (x > y)
-                return x + y
-            else
-                return x - y
-            endif
-        endFunction
-    endFunctions
+functions
+    functype integer: calcular(paramtype integer: x, y)
+        if (x > y)
+            return x + y
+        else
+            return x - y
+        endif
+    endFunction
+endFunctions
 
-    endProgram
-    """
+endProgram
+"""
 
     # Criar lexer
     lexer = Lexer(source_code)
 
-    # Gerar tokens  
+    # Gerar tokens
     tokens = lexer.tokenize_all()
 
     # Exibir tokens

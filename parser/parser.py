@@ -48,8 +48,8 @@ class Parser:
         self.current_position = 0
         self.tokens_found: List[Tuple[str, str, Optional[int], int]] = []
 
-        # CORREÇÃO: Códigos de átomos que representam identificadores (como strings)
-        self.identifier_codes = {'ID01', 'ID02', 'ID03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
+        # CORREÇÃO: Códigos de átomos que representam identificadores (IDN01, IDN02, IDN03)
+        self.identifier_codes = {'IDN01', 'IDN02', 'IDN03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
 
         # Controle de escopo (preparado para expansão futura)
         self.scope_stack = ['global']

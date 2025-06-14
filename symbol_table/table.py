@@ -48,9 +48,18 @@ class SymbolTable:
         # Verificar se o símbolo já existe
         existing_index = self.lookup(lexeme)
         if existing_index is not None:
-            # Símbolo já existe, apenas atualizar linha se necessário
+            # CORREÇÃO: Símbolo já existe, atualizar linha apenas se for diferente
             print(f"DEBUG SymbolTable: Símbolo '{lexeme}' já existe no índice {existing_index}")
-            self._update_line(existing_index - 1, line_number)  # Convert to 0-based
+            symbol = self.symbols[existing_index - 1]  # Convert to 0-based
+
+            # Só adicionar linha se for diferente da primeira ocorrência
+            if line_number not in symbol['lines']:
+                symbol['lines'].append(line_number)
+                symbol['lines'].sort()
+                print(f"DEBUG SymbolTable: Adicionada linha {line_number} ao símbolo '{lexeme}'")
+            else:
+                print(f"DEBUG SymbolTable: Linha {line_number} já existe para símbolo '{lexeme}'")
+
             return existing_index
 
         # Calcular tamanhos
@@ -67,7 +76,7 @@ class SymbolTable:
         # Criar novo símbolo
         symbol = {
             'entry_number': self.next_entry_number,
-            'atom_code': atom_code,  # CORREÇÃO: Manter como string (ID01, ID02, etc.)
+            'atom_code': atom_code,  # Manter como string (IDN01, IDN02, etc.)
             'lexeme': truncated_lexeme,
             'original_length': original_length,
             'truncated_length': truncated_length,
@@ -92,7 +101,7 @@ class SymbolTable:
     def _determine_symbol_type(self, atom_code):
         """
         Determina o tipo do símbolo baseado no código do átomo.
-        CORREÇÃO: Aceita códigos como strings (ID01, ID02, etc.)
+        CORREÇÃO: Aceita códigos como strings (IDN01, IDN02, etc.)
 
         Args:
             atom_code (str): Código do átomo como string
@@ -101,28 +110,15 @@ class SymbolTable:
             str: Tipo do símbolo
         """
         type_mapping = {
-            'ID01': 'nome de programa',    # PROGRAMNAME
-            'ID02': 'nome de variável',    # VARIABLE
-            'ID03': 'nome de função',      # FUNCTIONNAME
-            'ID04': 'constante inteira',   # INTCONST
-            'ID05': 'constante real',      # REALCONST
-            'ID06': 'constante string',    # STRINGCONST
-            'ID07': 'constante char'       # CHARCONST
+            'IDN01': 'nome de programa',    # PROGRAMNAME
+            'IDN02': 'nome de variável',    # VARIABLE
+            'IDN03': 'nome de função',      # FUNCTIONNAME
+            'IDN04': 'constante inteira',   # INTCONST
+            'IDN05': 'constante real',      # REALCONST
+            'IDN06': 'constante string',    # STRINGCONST
+            'IDN07': 'constante char'       # CHARCONST
         }
         return type_mapping.get(atom_code, 'tipo desconhecido')
-
-    def _update_line(self, index, line_number):
-        """
-        Atualiza as linhas de ocorrência de um símbolo existente.
-
-        Args:
-            index (int): Índice do símbolo na lista (0-based)
-            line_number (int): Nova linha de ocorrência
-        """
-        if 0 <= index < len(self.symbols):
-            if line_number not in self.symbols[index]['lines']:
-                self.symbols[index]['lines'].append(line_number)
-                self.symbols[index]['lines'].sort()
 
     def lookup(self, lexeme):
         """
@@ -203,7 +199,7 @@ class SymbolTable:
         for symbol in self.symbols:
             lines.append(f"Entrada: {symbol['entry_number']}")
             lines.append(f"    Lexema: {symbol['lexeme']}")
-            lines.append(f"    Código átomo: {symbol['atom_code']}")  # Agora será ID01, ID02, etc.
+            lines.append(f"    Código átomo: {symbol['atom_code']}")
             lines.append(f"    Tamanho original: {symbol['original_length']}")
             lines.append(f"    Tamanho após truncamento: {symbol['truncated_length']}")
             lines.append(f"    Tipo: {symbol['symbol_type']}")
@@ -274,13 +270,13 @@ if __name__ == "__main__":
 
     # Inserir alguns símbolos de teste
     test_symbols = [
-        ("MEUPROGRAMA", "ID01", 1),     # PROGRAMNAME
-        ("CONTADOR", "ID02", 3),        # VARIABLE
-        ("LIMITE", "ID02", 3),          # VARIABLE
-        ("CALCULAR", "ID03", 7),        # FUNCTIONNAME
-        ("X", "ID02", 7),              # VARIABLE
-        ("Y", "ID02", 7),              # VARIABLE
-        ("CONTADOR", "ID02", 10),       # VARIABLE (duplicata)
+        ("MEUPROGRAMA", "IDN01", 1),     # PROGRAMNAME
+        ("CONTADOR", "IDN02", 3),        # VARIABLE
+        ("LIMITE", "IDN02", 3),          # VARIABLE
+        ("CALCULAR", "IDN03", 7),        # FUNCTIONNAME
+        ("X", "IDN02", 7),              # VARIABLE
+        ("Y", "IDN02", 7),              # VARIABLE
+        ("CONTADOR", "IDN02", 10),       # VARIABLE (duplicata)
     ]
 
     print("Inserindo símbolos de teste:")
