@@ -1,4 +1,4 @@
-"""""
+"""
 Parser/Controller Principal do Static Checker CangaCode2025-1
 Universidade Católica do Salvador - UCSal
 Bacharelado em Engenharia de Software
@@ -7,6 +7,8 @@ Disciplina: Compiladores - Professor Osvaldo Requião Melo
 Este módulo implementa o controlador principal do Static Checker seguindo
 o padrão syntax-driven compiler. Coordena as chamadas ao analisador léxico
 e gerencia a tabela de símbolos.
+
+VERSÃO CORRIGIDA - MAPEAMENTO DE LINHAS
 """
 
 import os
@@ -48,7 +50,7 @@ class Parser:
         self.current_position = 0
         self.tokens_found: List[Tuple[str, str, Optional[int], int]] = []
 
-        # CORREÇÃO: Códigos de átomos que representam identificadores (IDN01, IDN02, IDN03)
+        # Códigos de átomos que representam identificadores (IDN01, IDN02, IDN03)
         self.identifier_codes = {'IDN01', 'IDN02', 'IDN03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
 
         # Controle de escopo (preparado para expansão futura)
@@ -128,15 +130,13 @@ class Parser:
 
     def _main_analysis_loop(self):
         """
-        Loop principal de análise: chama o lexer até EOF.
+        CORREÇÃO: Loop principal simplificado sem override de linhas
         """
         token_count = 0
         identifier_count = 0
-        max_line_seen = 0
 
         while True:
             try:
-                # Obter próximo token do lexer
                 token_result = self.lexer.next_token()
 
                 if token_result is None:  # EOF
@@ -145,33 +145,24 @@ class Parser:
                 token_code, lexeme, line_number = token_result
                 token_count += 1
 
-                # CORREÇÃO: Atualizar linha atual com o máximo visto
-                if line_number > max_line_seen:
-                    max_line_seen = line_number
-                    self.current_line = line_number
+                # CORREÇÃO: Não fazer override da linha aqui
+                # A linha já vem correta do lexer
 
-                # Processar o token
+                # Processar token normalmente
                 symbol_table_index = self._process_token(lexeme, token_code, line_number)
 
                 if symbol_table_index is not None:
                     identifier_count += 1
-                    print(f"DEBUG: Identificador inserido - Lexema: '{lexeme}', Código: {token_code}, Índice: {symbol_table_index}, Linha: {line_number}")
+                    print(f"DEBUG: Identificador '{lexeme}' inserido - Índice: {symbol_table_index}, Linha: {line_number}")
 
-                # Armazenar informações para o relatório .LEX
+                # Armazenar para relatório
                 self.tokens_found.append((lexeme, token_code, symbol_table_index, line_number))
 
             except Exception as e:
-                print(f"Erro ao processar token na linha {self.current_line}: {e}")
-                import traceback
-                traceback.print_exc()
+                print(f"Erro ao processar token: {e}")
                 continue
 
-        # CORREÇÃO: Usar o máximo das linhas processadas
-        self.current_line = max_line_seen
-
-        print(f"Total de tokens processados: {token_count}")
-        print(f"Total de identificadores inseridos na tabela: {identifier_count}")
-        print(f"Maior linha processada: {max_line_seen}")
+        print(f"Total processado: {token_count} tokens, {identifier_count} identificadores")
 
     def _process_token(self, lexeme: str, token_code: str, line_number: int) -> Optional[int]:
         """
@@ -189,7 +180,7 @@ class Parser:
         if token_code in self.identifier_codes:
             print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
-            # CORREÇÃO: Usar código string diretamente (sem conversão para número)
+            # Usar código string diretamente (sem conversão para número)
             symbol_index = self.symbol_table.insert(lexeme, token_code, line_number)
             print(f"DEBUG: Identificador '{lexeme}' inserido com índice {symbol_index}")
             return symbol_index
@@ -249,7 +240,7 @@ class Parser:
 
     def _generate_lex_report(self):
         """
-        Gera o relatório da análise léxica (.LEX) conforme exemplo visual fornecido.
+        CORREÇÃO: Gera relatório LEX com ordenação correta
         """
         lex_filename = self.directory / f"{self.base_name}.LEX"
 
@@ -265,20 +256,25 @@ class Parser:
             file.write(f"RELATÓRIO DA ANÁLISE LÉXICA. Texto fonte analisado: {self.base_name}.251\n")
             file.write("\n")
 
-            # CORREÇÃO: Ordenar tokens por linha antes de gerar relatório
-            sorted_tokens = sorted(self.tokens_found, key=lambda x: (x[3], x[0]))  # ordenar por linha, depois por lexema
+            # CORREÇÃO: Ordenar por linha, depois por posição de aparição
+            sorted_tokens = sorted(
+                self.tokens_found,
+                key=lambda x: (x[3] if x[3] is not None else 0, x[0])  # linha, lexema
+            )
 
-            # Tokens encontrados
+            # Validar antes de escrever
             for lexeme, token_code, symbol_index, line_number in sorted_tokens:
-                lexeme_str = f"Lexeme: {lexeme},"
-                code_str = f" Código: {token_code},"
-                if symbol_index is not None:
-                    index_str = f" ÍndiceTabSimb: {symbol_index},"
-                else:
-                    index_str = " ÍndiceTabSimb: -,"
-                line_str = f" Linha: {line_number}.\n"
+                if line_number is None or line_number < 1:
+                    print(f"AVISO: Token '{lexeme}' com linha inválida: {line_number}")
+                    line_number = 1  # Fallback
 
-                file.write(lexeme_str + code_str + index_str + line_str)
+                # Escrever entrada do token
+                file.write(f"Lexeme: {lexeme}, Código: {token_code}, ")
+                if symbol_index is not None:
+                    file.write(f"ÍndiceTabSimb: {symbol_index}, ")
+                else:
+                    file.write("ÍndiceTabSimb: -, ")
+                file.write(f"Linha: {line_number}.\n")
 
         print(f"Arquivo {lex_filename} gerado com {len(self.tokens_found)} tokens")
 

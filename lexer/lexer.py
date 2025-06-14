@@ -6,6 +6,7 @@ class Lexer:
     """
     Analisador léxico para a linguagem CangaCode2025-1
     Implementa todos os padrões léxicos especificados no Apêndice C
+    COM CORREÇÃO CRÍTICA DO MAPEAMENTO DE LINHAS
     """
 
     def __init__(self, source_code):
@@ -135,8 +136,11 @@ class Lexer:
         self.context_stack = []
         self.last_token_type = None
 
-        # CORREÇÃO: Pré-processar código mantendo controle de linhas
+        # CORREÇÃO CRÍTICA: Pré-processar código com mapeamento correto
         processed_source, self.line_mapping = self._preprocess_source_with_lines(source_code)
+
+        # CORREÇÃO: Validar mapeamento criado
+        self._validate_line_mapping(source_code, processed_source)
 
         # Construir o lexer
         self.lexer = lex.lex(module=self)
@@ -147,49 +151,68 @@ class Lexer:
 
     def _preprocess_source_with_lines(self, source):
         """
-        Pré-processa o código fonte removendo comentários mas mantendo mapeamento de linhas
+        CORREÇÃO CRÍTICA: Pré-processa o código fonte mantendo mapeamento correto de linhas
 
         Returns:
             tuple: (código_processado, mapeamento_linhas)
         """
-        lines = source.split('\n')
-        processed_lines = []
-        line_mapping = {}  # posição_no_processado -> linha_original
+        # PASSO 1: Remover comentários de bloco PRIMEIRO (antes do mapeamento)
+        source_without_block_comments = re.sub(r'/\*.*?\*/', '', source, flags=re.DOTALL)
 
-        current_processed_line = 1
+        # PASSO 2: Processar linha por linha
+        lines = source_without_block_comments.split('\n')
+        processed_lines = []
+        line_mapping = {}
 
         for original_line_num, line in enumerate(lines, 1):
-            # Remover comentários de linha //
-            line_without_single_comment = re.sub(r'//.*', '', line)
+            # Remover comentários de linha
+            line_without_comment = re.sub(r'//.*', '', line)
 
-            # Filtrar caracteres inválidos (manter apenas válidos)
+            # Filtrar caracteres inválidos
             valid_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-                              '+-*/(){}[]<>=!:;,?#$_."\' \t')
-            filtered_line = ''.join(c for c in line_without_single_comment if c in valid_chars)
+                              '+-*/(){}[]<>=!:;,?#$_."\' \t\n')
+            filtered_line = ''.join(c for c in line_without_comment if c in valid_chars)
 
-            # Se a linha tem conteúdo após filtragem, manter
-            if filtered_line.strip():
-                processed_lines.append(filtered_line)
-                line_mapping[current_processed_line] = original_line_num
-                current_processed_line += 1
-            else:
-                # Linha vazia ou só comentário - adicionar linha vazia para manter estrutura
-                processed_lines.append('')
-                line_mapping[current_processed_line] = original_line_num
-                current_processed_line += 1
+            # SEMPRE manter a linha (mesmo que vazia) para preservar numeração
+            processed_lines.append(filtered_line)
+            line_mapping[len(processed_lines)] = original_line_num
 
-        processed_source = '\n'.join(processed_lines)
+        return '\n'.join(processed_lines), line_mapping
 
-        # Remover comentários de bloco /* */ após processamento de linhas
-        processed_source = re.sub(r'/\*.*?\*/', '', processed_source, flags=re.DOTALL)
+    def _validate_line_mapping(self, original_source, processed_source):
+        """
+        CORREÇÃO: Valida se o mapeamento de linhas está correto
+        """
+        original_lines = len(original_source.split('\n'))
+        processed_lines = len(processed_source.split('\n'))
+        mapping_max = max(self.line_mapping.values()) if self.line_mapping else 0
 
-        return processed_source, line_mapping
+        print(f"DEBUG: Linhas originais: {original_lines}")
+        print(f"DEBUG: Linhas processadas: {processed_lines}")
+        print(f"DEBUG: Maior linha mapeada: {mapping_max}")
+        print(f"DEBUG: Entradas no mapeamento: {len(self.line_mapping)}")
+
+        if mapping_max > original_lines:
+            print(f"AVISO: Mapeamento inconsistente - max {mapping_max} > original {original_lines}")
 
     def _get_original_line(self, ply_line):
         """
-        Converte linha do PLY para linha original do arquivo
+        CORREÇÃO: Converte linha do PLY para linha original com validação
         """
-        return self.line_mapping.get(ply_line, ply_line)
+        if ply_line in self.line_mapping:
+            return self.line_mapping[ply_line]
+
+        # Se não encontrar mapeamento exato, procurar o mais próximo
+        available_lines = sorted(self.line_mapping.keys())
+        for mapped_line in available_lines:
+            if mapped_line >= ply_line:
+                return self.line_mapping[mapped_line]
+
+        # Último recurso: retornar a última linha conhecida
+        if available_lines:
+            return self.line_mapping[max(available_lines)]
+
+        return 1  # Fallback seguro
 
     def _truncate_lexeme(self, lexeme):
         """
@@ -300,7 +323,9 @@ class Lexer:
 
     def t_newline(self, t):
         r'\n+'
+        # CORREÇÃO: Deixar o PLY controlar lineno naturalmente
         t.lexer.lineno += len(t.value)
+        # Não fazer override manual aqui
 
     def t_error(self, t):
         """
@@ -310,7 +335,7 @@ class Lexer:
 
     def next_token(self):
         """
-        Retorna o próximo token
+        CORREÇÃO: Retorna o próximo token com linha correta
 
         Returns:
             tuple: (token_code, lexeme, line_number) ou None se EOF
@@ -320,13 +345,16 @@ class Lexer:
         if token is None:
             return None
 
+        # Obter linha original usando mapeamento validado
+        original_line = self._get_original_line(token.lineno)
+
+        # Debug para verificar mapeamento
+        print(f"DEBUG Lexer: Token '{token.value}' - PLY linha {token.lineno} -> Original linha {original_line}")
+
         # Obter código do átomo
         token_code = self.token_codes.get(token.type, 'UNKNOWN')
 
-        # CORREÇÃO: Converter linha do PLY para linha original
-        original_line = self._get_original_line(token.lineno)
-
-        # Armazenar token gerado para análise de contexto
+        # Armazenar para análise de contexto
         token_info = (token.type, token.value, original_line)
         self.tokens_generated.append(token_info)
 
@@ -346,6 +374,33 @@ class Lexer:
                 break
             tokens.append(token)
         return tokens
+
+
+# Função de teste para validar mapeamento de linhas
+def test_line_mapping():
+    """
+    Testa especificamente o mapeamento de linhas
+    """
+    test_code = """program teste
+// comentário linha 2
+declarations
+    /* comentário 
+       de bloco */
+    vartype integer: x
+endDeclarations
+endProgram"""
+
+    print("=== TESTE DE MAPEAMENTO DE LINHAS ===")
+    print("Código original:")
+    for i, line in enumerate(test_code.split('\n'), 1):
+        print(f"{i:2d}: {line}")
+
+    lexer = Lexer(test_code)
+    tokens = lexer.tokenize_all()
+
+    print("\nTokens com linhas:")
+    for code, lexeme, line in tokens:
+        print(f"  '{lexeme}' -> linha {line}")
 
 
 # Exemplo de uso
@@ -379,3 +434,7 @@ endProgram
     # Exibir tokens
     for token in tokens:
         print(f"Código: {token[0]}, Lexeme: {token[1]}, Linha: {token[2]}")
+
+    # Executar teste de mapeamento
+    print("\n" + "=" * 50)
+    test_line_mapping()
