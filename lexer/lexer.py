@@ -135,32 +135,61 @@ class Lexer:
         self.context_stack = []
         self.last_token_type = None
 
+        # CORREÇÃO: Pré-processar código mantendo controle de linhas
+        processed_source, self.line_mapping = self._preprocess_source_with_lines(source_code)
+
         # Construir o lexer
         self.lexer = lex.lex(module=self)
-
-        # CORREÇÃO: Processar código com numeração de linha consistente
-        processed_source = self._preprocess_source(source_code)
         self.lexer.input(processed_source)
 
         # Inicializar contador de linha do PLY
         self.lexer.lineno = 1
 
-    def _preprocess_source(self, source):
+    def _preprocess_source_with_lines(self, source):
         """
-        Pré-processa o código fonte removendo comentários e caracteres inválidos
+        Pré-processa o código fonte removendo comentários mas mantendo mapeamento de linhas
+
+        Returns:
+            tuple: (código_processado, mapeamento_linhas)
         """
-        # Remover comentários de bloco /* */
-        source = re.sub(r'/\*.*?\*/', '', source, flags=re.DOTALL)
+        lines = source.split('\n')
+        processed_lines = []
+        line_mapping = {}  # posição_no_processado -> linha_original
 
-        # Remover comentários de linha //
-        source = re.sub(r'//.*', '', source)
+        current_processed_line = 1
 
-        # Filtrar caracteres inválidos (manter apenas válidos)
-        valid_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-                          '+-*/(){}[]<>=!:;,?#$_."\' \t\n\r')
-        filtered_source = ''.join(c for c in source if c in valid_chars)
+        for original_line_num, line in enumerate(lines, 1):
+            # Remover comentários de linha //
+            line_without_single_comment = re.sub(r'//.*', '', line)
 
-        return filtered_source
+            # Filtrar caracteres inválidos (manter apenas válidos)
+            valid_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+                              '+-*/(){}[]<>=!:;,?#$_."\' \t')
+            filtered_line = ''.join(c for c in line_without_single_comment if c in valid_chars)
+
+            # Se a linha tem conteúdo após filtragem, manter
+            if filtered_line.strip():
+                processed_lines.append(filtered_line)
+                line_mapping[current_processed_line] = original_line_num
+                current_processed_line += 1
+            else:
+                # Linha vazia ou só comentário - adicionar linha vazia para manter estrutura
+                processed_lines.append('')
+                line_mapping[current_processed_line] = original_line_num
+                current_processed_line += 1
+
+        processed_source = '\n'.join(processed_lines)
+
+        # Remover comentários de bloco /* */ após processamento de linhas
+        processed_source = re.sub(r'/\*.*?\*/', '', processed_source, flags=re.DOTALL)
+
+        return processed_source, line_mapping
+
+    def _get_original_line(self, ply_line):
+        """
+        Converte linha do PLY para linha original do arquivo
+        """
+        return self.line_mapping.get(ply_line, ply_line)
 
     def _truncate_lexeme(self, lexeme):
         """
@@ -271,13 +300,11 @@ class Lexer:
 
     def t_newline(self, t):
         r'\n+'
-        # CORREÇÃO: Usar apenas o controle do PLY
         t.lexer.lineno += len(t.value)
 
     def t_error(self, t):
         """
         Tratamento de erro - caracteres inválidos são ignorados
-        (filtro de primeiro nível)
         """
         t.lexer.skip(1)
 
@@ -296,14 +323,14 @@ class Lexer:
         # Obter código do átomo
         token_code = self.token_codes.get(token.type, 'UNKNOWN')
 
-        # CORREÇÃO: Usar sempre t.lineno (controle do PLY)
-        line_number = token.lineno
+        # CORREÇÃO: Converter linha do PLY para linha original
+        original_line = self._get_original_line(token.lineno)
 
         # Armazenar token gerado para análise de contexto
-        token_info = (token.type, token.value, line_number)
+        token_info = (token.type, token.value, original_line)
         self.tokens_generated.append(token_info)
 
-        return (token_code, token.value, line_number)
+        return (token_code, token.value, original_line)
 
     def tokenize_all(self):
         """

@@ -1,4 +1,4 @@
-"""
+"""""
 Parser/Controller Principal do Static Checker CangaCode2025-1
 Universidade Católica do Salvador - UCSal
 Bacharelado em Engenharia de Software
@@ -122,6 +122,8 @@ class Parser:
             return False
         except Exception as e:
             print(f"Erro durante análise: {e}")
+            import traceback
+            traceback.print_exc()
             return False
 
     def _main_analysis_loop(self):
@@ -130,6 +132,7 @@ class Parser:
         """
         token_count = 0
         identifier_count = 0
+        max_line_seen = 0
 
         while True:
             try:
@@ -142,8 +145,9 @@ class Parser:
                 token_code, lexeme, line_number = token_result
                 token_count += 1
 
-                # Atualizar linha atual
-                if line_number > self.current_line:
+                # CORREÇÃO: Atualizar linha atual com o máximo visto
+                if line_number > max_line_seen:
+                    max_line_seen = line_number
                     self.current_line = line_number
 
                 # Processar o token
@@ -151,17 +155,23 @@ class Parser:
 
                 if symbol_table_index is not None:
                     identifier_count += 1
-                    print(f"DEBUG: Identificador inserido - Lexema: '{lexeme}', Código: {token_code}, Índice: {symbol_table_index}")
+                    print(f"DEBUG: Identificador inserido - Lexema: '{lexeme}', Código: {token_code}, Índice: {symbol_table_index}, Linha: {line_number}")
 
                 # Armazenar informações para o relatório .LEX
                 self.tokens_found.append((lexeme, token_code, symbol_table_index, line_number))
 
             except Exception as e:
                 print(f"Erro ao processar token na linha {self.current_line}: {e}")
+                import traceback
+                traceback.print_exc()
                 continue
+
+        # CORREÇÃO: Usar o máximo das linhas processadas
+        self.current_line = max_line_seen
 
         print(f"Total de tokens processados: {token_count}")
         print(f"Total de identificadores inseridos na tabela: {identifier_count}")
+        print(f"Maior linha processada: {max_line_seen}")
 
     def _process_token(self, lexeme: str, token_code: str, line_number: int) -> Optional[int]:
         """
@@ -169,13 +179,13 @@ class Parser:
 
         Args:
             lexeme: O texto do token
-            token_code: Código do átomo (string como ID01, ID02, etc.)
+            token_code: Código do átomo (string como IDN01, IDN02, etc.)
             line_number: Linha onde foi encontrado
 
         Returns:
             Índice na tabela de símbolos (se aplicável) ou None
         """
-        # Verificar se é um identificador (codes ID01, ID02, ID03)
+        # Verificar se é um identificador (codes IDN01, IDN02, IDN03)
         if token_code in self.identifier_codes:
             print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
@@ -200,7 +210,7 @@ class Parser:
             self._enter_scope('functions')
         elif lexeme.upper() == 'ENDFUNCTIONS':
             self._exit_scope()
-        elif token_code == 'ID03':  # functionName
+        elif token_code == 'IDN03':  # functionName
             self._enter_scope(f'function_{lexeme}')
         elif lexeme.upper() == 'ENDFUNCTION':
             self._exit_scope()
@@ -233,6 +243,8 @@ class Parser:
             print("Relatórios gerados com sucesso!")
         except Exception as e:
             print(f"Erro ao gerar relatórios: {e}")
+            import traceback
+            traceback.print_exc()
             raise
 
     def _generate_lex_report(self):
@@ -253,8 +265,11 @@ class Parser:
             file.write(f"RELATÓRIO DA ANÁLISE LÉXICA. Texto fonte analisado: {self.base_name}.251\n")
             file.write("\n")
 
+            # CORREÇÃO: Ordenar tokens por linha antes de gerar relatório
+            sorted_tokens = sorted(self.tokens_found, key=lambda x: (x[3], x[0]))  # ordenar por linha, depois por lexema
+
             # Tokens encontrados
-            for lexeme, token_code, symbol_index, line_number in self.tokens_found:
+            for lexeme, token_code, symbol_index, line_number in sorted_tokens:
                 lexeme_str = f"Lexeme: {lexeme},"
                 code_str = f" Código: {token_code},"
                 if symbol_index is not None:
@@ -264,6 +279,8 @@ class Parser:
                 line_str = f" Linha: {line_number}.\n"
 
                 file.write(lexeme_str + code_str + index_str + line_str)
+
+        print(f"Arquivo {lex_filename} gerado com {len(self.tokens_found)} tokens")
 
     def _generate_tab_report(self):
         """
@@ -297,6 +314,8 @@ class Parser:
                 file.write(f"TipoSimb: {symbol['symbol_type']}, Linhas: {{{', '.join(map(str, symbol['lines']))}}}.\n")
                 file.write("------------------------------------------------------------\n")
 
+        print(f"Arquivo {tab_filename} gerado com {self.symbol_table.get_symbol_count()} símbolos")
+
     def get_analysis_status(self) -> bool:
         """
         Retorna o status da análise.
@@ -319,7 +338,6 @@ class Parser:
             'total_lines': self.current_line,
             'scopes_processed': len(self.scope_stack)
         }
-
 
 # Exemplo de uso e teste
 if __name__ == "__main__":
