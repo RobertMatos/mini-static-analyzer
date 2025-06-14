@@ -32,7 +32,7 @@ class SymbolTable:
 
         Args:
             lexeme (str): O lexema do símbolo
-            atom_code (int): Código do átomo conforme Apêndice A
+            atom_code (str): Código do átomo como string (ID01, ID02, ID03, etc.)
             line_number (int): Número da linha onde aparece
             original_length (int, optional): Tamanho original antes da truncagem
 
@@ -67,7 +67,7 @@ class SymbolTable:
         # Criar novo símbolo
         symbol = {
             'entry_number': self.next_entry_number,
-            'atom_code': atom_code,
+            'atom_code': atom_code,  # CORREÇÃO: Manter como string (ID01, ID02, etc.)
             'lexeme': truncated_lexeme,
             'original_length': original_length,
             'truncated_length': truncated_length,
@@ -92,18 +92,22 @@ class SymbolTable:
     def _determine_symbol_type(self, atom_code):
         """
         Determina o tipo do símbolo baseado no código do átomo.
-        Conforme especificação do PDF.
+        CORREÇÃO: Aceita códigos como strings (ID01, ID02, etc.)
 
         Args:
-            atom_code (int): Código do átomo
+            atom_code (str): Código do átomo como string
 
         Returns:
             str: Tipo do símbolo
         """
         type_mapping = {
-            2: 'nome de programa',        # PROGRAMNAME
-            18: 'nome de função',         # FUNCTIONNAME
-            49: 'nome de variável'        # VARIABLE
+            'ID01': 'nome de programa',    # PROGRAMNAME
+            'ID02': 'nome de variável',    # VARIABLE
+            'ID03': 'nome de função',      # FUNCTIONNAME
+            'ID04': 'constante inteira',   # INTCONST
+            'ID05': 'constante real',      # REALCONST
+            'ID06': 'constante string',    # STRINGCONST
+            'ID07': 'constante char'       # CHARCONST
         }
         return type_mapping.get(atom_code, 'tipo desconhecido')
 
@@ -199,7 +203,7 @@ class SymbolTable:
         for symbol in self.symbols:
             lines.append(f"Entrada: {symbol['entry_number']}")
             lines.append(f"    Lexema: {symbol['lexeme']}")
-            lines.append(f"    Código átomo: {symbol['atom_code']}")
+            lines.append(f"    Código átomo: {symbol['atom_code']}")  # Agora será ID01, ID02, etc.
             lines.append(f"    Tamanho original: {symbol['original_length']}")
             lines.append(f"    Tamanho após truncamento: {symbol['truncated_length']}")
             lines.append(f"    Tipo: {symbol['symbol_type']}")
@@ -270,13 +274,13 @@ if __name__ == "__main__":
 
     # Inserir alguns símbolos de teste
     test_symbols = [
-        ("MEUPROGRAMA", 2, 1),      # PROGRAMNAME
-        ("CONTADOR", 49, 3),        # VARIABLE
-        ("LIMITE", 49, 3),          # VARIABLE
-        ("CALCULAR", 18, 7),        # FUNCTIONNAME
-        ("X", 49, 7),              # VARIABLE
-        ("Y", 49, 7),              # VARIABLE
-        ("CONTADOR", 49, 10),       # VARIABLE (duplicata)
+        ("MEUPROGRAMA", "ID01", 1),     # PROGRAMNAME
+        ("CONTADOR", "ID02", 3),        # VARIABLE
+        ("LIMITE", "ID02", 3),          # VARIABLE
+        ("CALCULAR", "ID03", 7),        # FUNCTIONNAME
+        ("X", "ID02", 7),              # VARIABLE
+        ("Y", "ID02", 7),              # VARIABLE
+        ("CONTADOR", "ID02", 10),       # VARIABLE (duplicata)
     ]
 
     print("Inserindo símbolos de teste:")

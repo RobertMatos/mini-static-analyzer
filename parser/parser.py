@@ -48,8 +48,7 @@ class Parser:
         self.current_position = 0
         self.tokens_found: List[Tuple[str, str, Optional[int], int]] = []
 
-        # CORREÇÃO: Códigos de átomos que representam identificadores
-        # Usando os códigos corretos do lexer (ID01, ID02, ID03)
+        # CORREÇÃO: Códigos de átomos que representam identificadores (como strings)
         self.identifier_codes = {'ID01', 'ID02', 'ID03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
 
         # Controle de escopo (preparado para expansão futura)
@@ -170,7 +169,7 @@ class Parser:
 
         Args:
             lexeme: O texto do token
-            token_code: Código do átomo (string)
+            token_code: Código do átomo (string como ID01, ID02, etc.)
             line_number: Linha onde foi encontrado
 
         Returns:
@@ -180,17 +179,8 @@ class Parser:
         if token_code in self.identifier_codes:
             print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
-            # CORREÇÃO: Converter código string para inteiro para a tabela de símbolos
-            code_mapping = {
-                'ID01': 2,   # PROGRAMNAME
-                'ID02': 49,  # VARIABLE
-                'ID03': 18   # FUNCTIONNAME
-            }
-
-            numeric_code = code_mapping.get(token_code, 0)
-
-            # Inserir na tabela de símbolos
-            symbol_index = self.symbol_table.insert(lexeme, numeric_code, line_number)
+            # CORREÇÃO: Usar código string diretamente (sem conversão para número)
+            symbol_index = self.symbol_table.insert(lexeme, token_code, line_number)
             print(f"DEBUG: Identificador '{lexeme}' inserido com índice {symbol_index}")
             return symbol_index
 

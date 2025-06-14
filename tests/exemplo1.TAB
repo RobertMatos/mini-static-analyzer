@@ -7,91 +7,91 @@ Componentes:
 
 RELATÓRIO DA TABELA DE SÍMBOLOS. Texto fonte analisado: exemplo1.251
 
-Entrada: 1, Codigo: 2, Lexeme: CALCULADORASIMPLES,
+Entrada: 1, Codigo: ID01, Lexeme: CALCULADORASIMPLES,
 QtdCharAntesTrunc: 18, QtdCharDepoisTrunc: 18,
 TipoSimb: nome de programa, Linhas: {1}.
 ------------------------------------------------------------
-Entrada: 2, Codigo: 49, Lexeme: CONTADOR,
+Entrada: 2, Codigo: ID02, Lexeme: CONTADOR,
 QtdCharAntesTrunc: 8, QtdCharDepoisTrunc: 8,
 TipoSimb: nome de variável, Linhas: {3, 30, 33, 34, 37, 39, 40}.
 ------------------------------------------------------------
-Entrada: 3, Codigo: 49, Lexeme: LIMITE,
+Entrada: 3, Codigo: ID02, Lexeme: LIMITE,
 QtdCharAntesTrunc: 6, QtdCharDepoisTrunc: 6,
 TipoSimb: nome de variável, Linhas: {3, 31, 33, 37}.
 ------------------------------------------------------------
-Entrada: 4, Codigo: 49, Lexeme: RESULTADO,
+Entrada: 4, Codigo: ID02, Lexeme: RESULTADO,
 QtdCharAntesTrunc: 9, QtdCharDepoisTrunc: 9,
 TipoSimb: nome de variável, Linhas: {3, 16, 17}.
 ------------------------------------------------------------
-Entrada: 5, Codigo: 49, Lexeme: NOTA1,
+Entrada: 5, Codigo: ID02, Lexeme: NOTA1,
 QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
 TipoSimb: nome de variável, Linhas: {4}.
 ------------------------------------------------------------
-Entrada: 6, Codigo: 49, Lexeme: NOTA2,
+Entrada: 6, Codigo: ID02, Lexeme: NOTA2,
 QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
 TipoSimb: nome de variável, Linhas: {4}.
 ------------------------------------------------------------
-Entrada: 7, Codigo: 49, Lexeme: MEDIAFINAL,
+Entrada: 7, Codigo: ID02, Lexeme: MEDIAFINAL,
 QtdCharAntesTrunc: 10, QtdCharDepoisTrunc: 10,
 TipoSimb: nome de variável, Linhas: {4}.
 ------------------------------------------------------------
-Entrada: 8, Codigo: 49, Lexeme: NOMEALUNO,
+Entrada: 8, Codigo: ID02, Lexeme: NOMEALUNO,
 QtdCharAntesTrunc: 9, QtdCharDepoisTrunc: 9,
 TipoSimb: nome de variável, Linhas: {5}.
 ------------------------------------------------------------
-Entrada: 9, Codigo: 49, Lexeme: DISCIPLINA,
+Entrada: 9, Codigo: ID02, Lexeme: DISCIPLINA,
 QtdCharAntesTrunc: 10, QtdCharDepoisTrunc: 10,
 TipoSimb: nome de variável, Linhas: {5}.
 ------------------------------------------------------------
-Entrada: 10, Codigo: 49, Lexeme: APROVADO,
+Entrada: 10, Codigo: ID02, Lexeme: APROVADO,
 QtdCharAntesTrunc: 8, QtdCharDepoisTrunc: 8,
 TipoSimb: nome de variável, Linhas: {6}.
 ------------------------------------------------------------
-Entrada: 11, Codigo: 49, Lexeme: OPCAO,
+Entrada: 11, Codigo: ID02, Lexeme: OPCAO,
 QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
 TipoSimb: nome de variável, Linhas: {7}.
 ------------------------------------------------------------
-Entrada: 12, Codigo: 49, Lexeme: NUMEROS,
+Entrada: 12, Codigo: ID02, Lexeme: NUMEROS,
 QtdCharAntesTrunc: 7, QtdCharDepoisTrunc: 7,
 TipoSimb: nome de variável, Linhas: {8}.
 ------------------------------------------------------------
-Entrada: 13, Codigo: 49, Lexeme: MEDIAS,
+Entrada: 13, Codigo: ID02, Lexeme: MEDIAS,
 QtdCharAntesTrunc: 6, QtdCharDepoisTrunc: 6,
 TipoSimb: nome de variável, Linhas: {9}.
 ------------------------------------------------------------
-Entrada: 14, Codigo: 49, Lexeme: ENDDECLARARIONS,
+Entrada: 14, Codigo: ID02, Lexeme: ENDDECLARARIONS,
 QtdCharAntesTrunc: 15, QtdCharDepoisTrunc: 15,
 TipoSimb: nome de variável, Linhas: {10}.
 ------------------------------------------------------------
-Entrada: 15, Codigo: 18, Lexeme: SOMAR,
+Entrada: 15, Codigo: ID03, Lexeme: SOMAR,
 QtdCharAntesTrunc: 5, QtdCharDepoisTrunc: 5,
 TipoSimb: nome de função, Linhas: {12}.
 ------------------------------------------------------------
-Entrada: 16, Codigo: 49, Lexeme: NUM1,
+Entrada: 16, Codigo: ID02, Lexeme: NUM1,
 QtdCharAntesTrunc: 4, QtdCharDepoisTrunc: 4,
 TipoSimb: nome de variável, Linhas: {12, 16}.
 ------------------------------------------------------------
-Entrada: 17, Codigo: 49, Lexeme: NUM2,
+Entrada: 17, Codigo: ID02, Lexeme: NUM2,
 QtdCharAntesTrunc: 4, QtdCharDepoisTrunc: 4,
 TipoSimb: nome de variável, Linhas: {12, 16}.
 ------------------------------------------------------------
-Entrada: 18, Codigo: 18, Lexeme: CALCULARMEDIA,
+Entrada: 18, Codigo: ID03, Lexeme: CALCULARMEDIA,
 QtdCharAntesTrunc: 13, QtdCharDepoisTrunc: 13,
 TipoSimb: nome de função, Linhas: {21}.
 ------------------------------------------------------------
-Entrada: 19, Codigo: 49, Lexeme: N1,
+Entrada: 19, Codigo: ID02, Lexeme: N1,
 QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
 TipoSimb: nome de variável, Linhas: {21, 24}.
 ------------------------------------------------------------
-Entrada: 20, Codigo: 49, Lexeme: N2,
+Entrada: 20, Codigo: ID02, Lexeme: N2,
 QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
 TipoSimb: nome de variável, Linhas: {21, 24}.
 ------------------------------------------------------------
-Entrada: 21, Codigo: 49, Lexeme: N3,
+Entrada: 21, Codigo: ID02, Lexeme: N3,
 QtdCharAntesTrunc: 2, QtdCharDepoisTrunc: 2,
 TipoSimb: nome de variável, Linhas: {21, 24}.
 ------------------------------------------------------------
-Entrada: 22, Codigo: 18, Lexeme: PROCESSARDADOS,
+Entrada: 22, Codigo: ID03, Lexeme: PROCESSARDADOS,
 QtdCharAntesTrunc: 14, QtdCharDepoisTrunc: 14,
 TipoSimb: nome de função, Linhas: {28}.
 ------------------------------------------------------------
