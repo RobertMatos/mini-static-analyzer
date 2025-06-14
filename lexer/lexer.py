@@ -22,62 +22,75 @@ class Lexer:
 
         # Mapeamento de códigos dos átomos conforme Apêndice A
         self.token_codes = {
-            'PROGRAM': 1,
-            'PROGRAMNAME': 2,
-            'DECLARATIONS': 3,
-            'ENDDECLARATIONS': 4,
-            'FUNCTIONS': 5,
-            'ENDFUNCTIONS': 6,
-            'ENDPROGRAM': 7,
-            'SEMICOLON': 8,
-            'VARTYPE': 9,
-            'COLON': 10,
-            'REAL': 11,
-            'INTEGER': 12,
-            'STRING': 13,
-            'BOOLEAN': 14,
-            'CHARACTER': 15,
-            'VOID': 16,
-            'LBRACKET': 17,
-            'RBRACKET': 17,  # Mesmo código que LBRACKET
-            'FUNCTYPE': 18,
-            'LPAREN': 19,
-            'RPAREN': 20,
-            'ENDFUNCTION': 21,
-            'COMMA': 22,
-            'QUESTION': 22,  # Mesmo código que COMMA
-            'PARAMTYPE': 23,
-            'LBRACE': 24,
-            'RBRACE': 25,
-            'IF': 26,
-            'ENDIF': 27,
-            'ELSE': 28,
-            'WHILE': 29,
-            'ENDWHILE': 30,
-            'RETURN': 31,
-            'BREAK': 32,
-            'PRINT': 33,
-            'ASSIGN': 34,
-            'LEQ': 35,
-            'LT': 36,
-            'GT': 37,
-            'GEQ': 38,
-            'EQ': 39,
-            'NEQ': 40,
-            'HASH': 41,
-            'MINUS': 42,
-            'PLUS': 43,
-            'MULTIPLY': 44,
-            'DIVIDE': 45,
-            'MODULO': 46,
-            'TRUE': 47,
-            'FALSE': 48,
-            'VARIABLE': 49,  # Identificadores de variável
-            'INTCONST': 50,
-            'REALCONST': 51,
-            'STRINGCONST': 52,
-            'CHARCONST': 53,
-            'FUNCTIONNAME': 18  # Reutiliza código do FUNCTYPE
+            # Palavras Reservadas (Códigos PRS01-PRS26)
+            'INTEGER': 'PRS01',
+            'PROGRAM': 'PRS14',
+            'REAL': 'PRS02',
+            'ENDPROGRAM': 'PRS15',
+            'CHARACTER': 'PRS03',
+            'FUNCTIONS': 'PRS16',
+            'STRING': 'PRS04',
+            'ENDFUNCTIONS': 'PRS17',
+            'BOOLEAN': 'PRS05',
+            'ENDFUNCTION': 'PRS18',
+            'VOID': 'PRS06',
+            'RETURN': 'PRS19',
+            'TRUE': 'PRS07',
+            'IF': 'PRS20',
+            'FALSE': 'PRS08',
+            'ELSE': 'PRS21',
+            'VARTYPE': 'PRS09',
+            'ENDIF': 'PRS22',
+            'FUNCTYPE': 'PRS10',
+            'WHILE': 'PRS23',
+            'PARAMTYPE': 'PRS11',
+            'ENDWHILE': 'PRS24',
+            'DECLARATIONS': 'PRS12',
+            'BREAK': 'PRS25',
+            'ENDDECLARATIONS': 'PRS13',
+            'PRINT': 'PRS26',
+
+            # Símbolos Reservados (Códigos SRS01-SRS22)
+            'SEMICOLON': 'SRS01',  # ;
+            'HASH': 'SRS12',  # #
+            'COMMA': 'SRS02',  # ,
+            'MINUS': 'SRS13',  # -
+            'COLON': 'SRS03',  # :
+            'PLUS': 'SRS14',  # +
+            'ASSIGN': 'SRS04',  # :=
+            'MULTIPLY': 'SRS15',  # *
+            'QUESTION': 'SRS05',  # ?
+            'DIVIDE': 'SRS16',  # /
+            'LPAREN': 'SRS06',  # (
+            'MODULO': 'SRS17',  # %
+            'RPAREN': 'SRS07',  # )
+            'EQ': 'SRS18',  # ==
+            'LBRACKET': 'SRS08',  # [
+            'NEQ': 'SRS19',  # !=
+            'RBRACKET': 'SRS09',  # ]
+            'LT': 'SRS20',  # <
+            'LBRACE': 'SRS10',  # {
+            'LEQ': 'SRS21',  # <=
+            'RBRACE': 'SRS11',  # }
+            'GT': 'SRS22',  # >
+            'GEQ': 'SRS23',  # >=
+
+            # Identificadores (Códigos ID01-ID07)
+            'PROGRAMNAME': 'ID01',
+            'VARIABLE': 'ID02',
+            'FUNCTIONNAME': 'ID03',
+
+            # Constantes (Códigos ID04-ID07)
+            'INTCONST': 'ID04',
+            'REALCONST': 'ID05',
+            'STRINGCONST': 'ID06',
+            'CHARCONST': 'ID07',
+
+            # Submáquinas (Códigos SUB01-SUBNN)
+            'SUBMACHINE1': 'SUB01',
+            'SUBMACHINE2': 'SUB02',
+            'SUBMACHINE3': 'SUB03',
+            'SUBMACHINEN': 'SUBNN'
         }
 
         # Palavras reservadas
@@ -277,7 +290,7 @@ class Lexer:
             return None
 
         # Obter código do átomo
-        token_code = self.token_codes.get(token.type, 0)
+        token_code = self.token_codes.get(token.type, 'UNKNOWN')
 
         # Armazenar token gerado para análise de contexto
         token_info = (token.type, token.value, token.lineno)
@@ -327,7 +340,7 @@ if __name__ == "__main__":
     # Criar lexer
     lexer = Lexer(source_code)
 
-    # Gerar tokens
+    # Gerar tokens  
     tokens = lexer.tokenize_all()
 
     # Exibir tokens

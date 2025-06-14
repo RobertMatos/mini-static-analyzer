@@ -46,10 +46,10 @@ class Parser:
         # Controle de análise
         self.current_line = 1
         self.current_position = 0
-        self.tokens_found: List[Tuple[str, int, Optional[int], int]] = []
+        self.tokens_found: List[Tuple[str, str, Optional[int], int]] = []
 
-        # Códigos de átomos que representam identificadores
-        self.identifier_codes = {2, 18, 49}  # PROGRAMNAME, FUNCTYPE/FUNCTIONNAME, VARIABLE
+        # Códigos de átomos que representam identificadores (CORRIGIDO)
+        self.identifier_codes = {'IND01', 'IND02', 'IND03'}  # PROGRAMNAME, VARIABLE, FUNCTIONNAME
 
         # Controle de escopo (preparado para expansão futura)
         self.scope_stack = ['global']
@@ -163,19 +163,19 @@ class Parser:
         print(f"Total de tokens processados: {token_count}")
         print(f"Total de identificadores inseridos na tabela: {identifier_count}")
 
-    def _process_token(self, lexeme: str, token_code: int, line_number: int) -> Optional[int]:
+    def _process_token(self, lexeme: str, token_code: str, line_number: int) -> Optional[int]:
         """
         Processa um token individual.
 
         Args:
             lexeme: O texto do token
-            token_code: Código do átomo
+            token_code: Código do átomo (string)
             line_number: Linha onde foi encontrado
 
         Returns:
             Índice na tabela de símbolos (se aplicável) ou None
         """
-        # Verificar se é um identificador (codes 2, 18, 49)
+        # Verificar se é um identificador (codes IND01, IND02, IND03)
         if token_code in self.identifier_codes:
             print(f"DEBUG: Processando identificador - Lexema: '{lexeme}', Código: {token_code}, Linha: {line_number}")
 
@@ -187,7 +187,7 @@ class Parser:
         # Palavras reservadas, constantes e operadores não vão para tabela de símbolos
         return None
 
-    def _update_scope_control(self, lexeme: str, token_code: int):
+    def _update_scope_control(self, lexeme: str, token_code: str):
         """
         Atualiza o controle de escopo (preparado para expansão futura).
 
@@ -200,7 +200,7 @@ class Parser:
             self._enter_scope('functions')
         elif lexeme.upper() == 'ENDFUNCTIONS':
             self._exit_scope()
-        elif token_code == 18:  # functionName
+        elif token_code == 'IND03':  # functionName
             self._enter_scope(f'function_{lexeme}')
         elif lexeme.upper() == 'ENDFUNCTION':
             self._exit_scope()
