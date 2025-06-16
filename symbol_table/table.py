@@ -40,7 +40,7 @@ class SymbolTable:
             int: Índice do símbolo na tabela (1-based)
         """
         # Debug: imprimir tentativa de inserção
-        print(f"DEBUG SymbolTable: Tentando inserir - Lexema: '{lexeme}', Código: {atom_code}, Linha: {line_number}")
+        # print(f"DEBUG SymbolTable: Tentando inserir - Lexema: '{lexeme}', Código: {atom_code}, Linha: {line_number}")
 
         # Normalizar lexema para case-insensitive
         lexeme_normalized = lexeme.upper()
@@ -48,17 +48,17 @@ class SymbolTable:
         # Verificar se o símbolo já existe
         existing_index = self.lookup(lexeme)
         if existing_index is not None:
-            # CORREÇÃO: Símbolo já existe, atualizar linha apenas se for diferente
-            print(f"DEBUG SymbolTable: Símbolo '{lexeme}' já existe no índice {existing_index}")
+            # CORREÇÃO: Se o símbolo já existe, atualizar linha apenas se for diferente
+            # print(f"DEBUG SymbolTable: Símbolo '{lexeme}' já existe no índice {existing_index}")
             symbol = self.symbols[existing_index - 1]  # Convert to 0-based
 
             # Só adicionar linha se for diferente da primeira ocorrência
             if line_number not in symbol['lines']:
                 symbol['lines'].append(line_number)
                 symbol['lines'].sort()
-                print(f"DEBUG SymbolTable: Adicionada linha {line_number} ao símbolo '{lexeme}'")
-            else:
-                print(f"DEBUG SymbolTable: Linha {line_number} já existe para símbolo '{lexeme}'")
+                # print(f"DEBUG SymbolTable: Adicionada linha {line_number} ao símbolo '{lexeme}'")
+            # else:
+            #     print(f"DEBUG SymbolTable: Linha {line_number} já existe para símbolo '{lexeme}'")
 
             return existing_index
 
@@ -90,7 +90,7 @@ class SymbolTable:
         # Atualizar lookup table (case-insensitive)
         self.lookup_table[lexeme_normalized] = self.next_entry_number
 
-        print(f"DEBUG SymbolTable: Símbolo '{lexeme}' inserido com sucesso no índice {self.next_entry_number}")
+        # print(f"DEBUG SymbolTable: Símbolo '{lexeme}' inserido com sucesso no índice {self.next_entry_number}")
 
         # Incrementar contador e retornar índice
         current_index = self.next_entry_number
@@ -215,19 +215,19 @@ class SymbolTable:
 
         return '\n'.join(lines)
 
-    def print_debug_info(self):
-        """
-        Imprime informações de debug da tabela.
-        """
-        print(f"DEBUG SymbolTable - Estado atual:")
-        print(f"  Total de símbolos: {len(self.symbols)}")
-        print(f"  Próximo número de entrada: {self.next_entry_number}")
-        print(f"  Lookup table keys: {list(self.lookup_table.keys())}")
+    # def print_debug_info(self):
+    #     """
+    #     Imprime informações de debug da tabela.
+    #     """
+    #     print(f"DEBUG SymbolTable - Estado atual:")
+    #     print(f"  Total de símbolos: {len(self.symbols)}")
+    #     print(f"  Próximo número de entrada: {self.next_entry_number}")
+    #     print(f"  Lookup table keys: {list(self.lookup_table.keys())}")
 
-        if self.symbols:
-            print("  Símbolos:")
-            for i, symbol in enumerate(self.symbols):
-                print(f"    [{i}] {symbol}")
+    #     if self.symbols:
+    #         print("  Símbolos:")
+    #         for i, symbol in enumerate(self.symbols):
+    #             print(f"    [{i}] {symbol}")
 
     def validate_integrity(self):
         """

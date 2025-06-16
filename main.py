@@ -8,7 +8,6 @@ Demonstra o uso correto das classes corrigidas.
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Adicionar o diretório atual ao path para imports
@@ -68,8 +67,12 @@ def main():
 
     # Verificar argumentos
     if len(sys.argv) != 2:
+        print ("Sem usar o executável")
         print("Uso: python main.py <arquivo.251>")
-        print("Ou: python main.py teste (para criar arquivo de teste)")
+        print("Ou: python main.py teste (para criar arquivo de teste)\n")
+        print("Com o executável")
+        print("Uso(windows, na mesma pasta): .\CangaCode2025-1.exe <arquivo.251>")
+        print("Ou(windows, na mesma pasta): .\CangaCode2025-1.exe teste (para criar arquivo de teste)\n")
         sys.exit(1)
 
     filename = sys.argv[1]

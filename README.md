@@ -15,7 +15,7 @@ Construir um programa em Python capaz de:
 
 ## 🛠️ Tecnologias Utilizadas
 
-- Linguagem: **Python 3.12**
+- Linguagem: **Python 3.12+**
 - Biblioteca principal: [PLY (Python Lex-Yacc)](https://www.dabeaz.com/ply/)
 - Editor recomendado: **PyCharm**
 - Empacotamento: **PyInstaller**
@@ -28,9 +28,8 @@ Construir um programa em Python capaz de:
 mini-static-analyzer/
 ├── main.py                    # Arquivo principal
 ├── lexer/lexer.py             # Analisador léxico
-├── parser/parser.py           # (Em breve) Analisador sintático
+├── parser/parser.py           # Analisador sintático
 ├── symbol_table/table.py      # Tabela de símbolos
-├── output/                    # Relatórios .LEX e .TAB
 ├── tests/                     # Arquivos de teste (.251)
 ├── requirements.txt           # Dependências
 └── dist/CangaCodeChecker.exe  # Executável gerado (opcional)
@@ -40,42 +39,52 @@ mini-static-analyzer/
 
 ## ▶️ Como Executar
 
-### 💻 Opção 1: Usando o Código Python
+### 💻 Opção 1: Usando o Código Python (Via Terminal dentro da pasta do projeto)
 
-1. Instale as dependências:
+1. Crie um ambiente virtual usando o proprio python
 
-```bash
-pip install -r requirements.txt
-```
+    ```bash
+    python -m venv .venv
+    ```
+2. Acesse o ambiente virtual criado
+    ```bash
+    # Ambiente Windows
+    source .\.venv_py\Scripts\activate
+    
+    # Ambiente Linux
+    source .venv/bin/activate
+    ```
+3. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Execute o analisador (sem extensão `.251`):
+   ```bash
+   python main.py <nome_do_arquivo>
+   ```
 
-2. Execute o analisador (sem extensão `.251`):
+5. Exemplo:
 
-```bash
-python main.py <nome_do_arquivo>
-```
-
-Exemplo:
-
-```bash
-python main.py MeuPrograma
-```
+   ```bash
+   python main.py MeuPrograma
+   ```
 
 ---
 
-### 🪟 Opção 2: Executável para Windows
+### 🪟 Opção 2: Executável para Windows(Execução via terminal...)
 
 1. Compile o executável (ou baixe, se já estiver disponível):
-
-```bash
-pip install pyinstaller
-pyinstaller --onefile --name="CangaCodeChecker" main.py
-```
-
+   ```bash
+   pyinstaller --onefile --name="CangaCodeChecker" main.py
+   ```
 2. Use da seguinte forma:
 
-```cmd
-CangaCodeChecker.exe MeuPrograma
-```
+   ```cmd
+   # Execução com arquivo .251
+   CangaCodeChecker.exe MeuPrograma
+   
+   
+   ```
 
 O programa irá procurar automaticamente `MeuPrograma.251` no diretório atual e gerar:
 
@@ -141,23 +150,6 @@ Erros comuns:
 - Arquivo `.251` não encontrado
 - Caminho incorreto ou sem permissão
 - Comentários ou caracteres inválidos são ignorados
-
----
-
-## 📦 Requisitos
-
-- Python 3.8+
-- `requirements.txt`:
-
-```txt
-ply==3.11
-```
-
-Instale com:
-
-```bash
-pip install -r requirements.txt
-```
 
 ---
 
