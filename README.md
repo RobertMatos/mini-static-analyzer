@@ -77,16 +77,23 @@ mini-static-analyzer/
    ```bash
    pyinstaller --onefile --name="CangaCodeChecker" main.py
    ```
+   - Arquivo irá ser gerado na pasta dist.
+   
 2. Use da seguinte forma:
 
    ```cmd
-   # Execução com arquivo .251
+   # Execução com arquivo .251 (Recomendado está na mesma pasta, caso não... informe o caminho ate o arquivo exemplo a seguir:  "C:\Users\fox\CangaCode\exemplo.251")
    CangaCodeChecker.exe MeuPrograma
-   
-   
+      # Execução em ambiente WINDOWS se estiver na pasta principal do projeto
+      .\dist\CangaCodeChecker.exe .\tests\exemplo1.251
+      
+   # Execução teste para verificar se estão ok
+   CangaCodeChecker.exe teste
+       # Execução em ambiente WINDOWS se estiver na pasta principal do projeto
+       .\dist\CangaCodeChecker.exe teste
    ```
 
-O programa irá procurar automaticamente `MeuPrograma.251` no diretório atual e gerar:
+O programa irá gerar automaticamente `MeuPrograma.251` no diretório que ele foi especificado (Como tem em /tests o .LEX e .TAB gera lá):
 
 - `MeuPrograma.LEX`
 - `MeuPrograma.TAB`
